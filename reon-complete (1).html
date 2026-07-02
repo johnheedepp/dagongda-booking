@@ -1,0 +1,1986 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>다공다 — 공간을 다시 켜다</title>
+
+<!-- PWA 설정 -->
+<meta name="theme-color" content="#f9ba0d">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="다공다">
+<meta name="application-name" content="다공다">
+<meta name="description" content="공간을 다시 켜다 — 인테리어·시공·수리 플랫폼 다공다">
+
+<!-- 홈화면 아이콘 (SVG 인라인 아이콘을 data URI로 생성) -->
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjE5MiIgaGVpZ2h0PSIxOTIiIHJ4PSIzOCIgZmlsbD0iI0Y1QzQwMCIvPjx0ZXh0IHg9Ijk2IiB5PSIxMjAiIGZvbnQtZmFtaWx5PSInTm90byBTYW5zIEtSJywgc2Fucy1zZXJpZiIgZm9udC1zaXplPSI3MiIgZm9udC13ZWlnaHQ9IjcwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzExMTExMSI+64CQ6rSA64CQIDwvdGV4dD48L3N2Zz4=">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f9ba0d'/><text x='50' y='68' font-family='sans-serif' font-size='42' font-weight='bold' text-anchor='middle' fill='%23111'>다</text></svg>">
+
+<!-- 매니페스트 (인라인 blob 방식) -->
+<script>
+(function(){
+  const manifest = {
+    name: '다공다',
+    short_name: '다공다',
+    description: '공간을 다시 켜다 — 인테리어·시공·수리 플랫폼',
+    start_url: '.',
+    display: 'standalone',
+    background_color: '#ffffff',
+    theme_color: '#f9ba0d',
+    orientation: 'portrait',
+    icons: [
+      { src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='38' fill='%23f9ba0d'/><text x='96' y='120' font-family='sans-serif' font-size='72' font-weight='bold' text-anchor='middle' fill='%23111'>다</text></svg>", sizes: '192x192', type: 'image/svg+xml' },
+      { src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%23f9ba0d'/><text x='256' y='320' font-family='sans-serif' font-size='200' font-weight='bold' text-anchor='middle' fill='%23111'>다</text></svg>", sizes: '512x512', type: 'image/svg+xml' }
+    ]
+  };
+  const blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('link');
+  link.rel = 'manifest'; link.href = url;
+  document.head.appendChild(link);
+})();
+</script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+:root{
+  --y:#f9ba0d;--yd:#d4a017;--yp:#fff9e0;
+  --blk:#111111;--g1:#333;--g2:#666;--g3:#999;--g4:#CCC;--g5:#F0F0F0;
+  --wh:#FFFFFF;--bg:#F7F7F5;
+  --red:#E53935;--green:#2E7D32;--blue:#1565C0;--orange:#E65100;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px;scroll-behavior:smooth}
+body{font-family:'Noto Sans KR','DM Sans',sans-serif;background:var(--wh);color:var(--blk);overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom)}
+.top-nav{padding-top:env(safe-area-inset-top)}
+.page{display:none;min-height:100vh}.page.active{display:block}
+
+/* ── NAV ── */
+.top-nav{position:fixed;top:0;left:0;right:0;z-index:900;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 48px;background:var(--wh);border-bottom:1px solid var(--g5);transition:all .3s}
+.nav-logo{font-family:'Noto Sans KR','DM Sans',sans-serif;font-size:26px;font-weight:700;letter-spacing:.08em;color:var(--blk);cursor:pointer;text-decoration:none}
+.nav-logo span{color:var(--y)}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{text-decoration:none;font-size:13px;font-weight:500;color:var(--g2);letter-spacing:.02em;transition:color .2s;cursor:pointer}
+.nav-links a:hover{color:var(--blk)}
+.nav-right{display:flex;gap:8px;align-items:center}
+.nav-btn-login{padding:8px 18px;border:1.5px solid var(--g4);background:transparent;font-size:12px;font-weight:600;cursor:pointer;border-radius:4px;font-family:inherit;color:var(--g1);transition:all .2s}
+.nav-btn-login:hover{border-color:var(--blk);color:var(--blk)}
+.nav-btn-signup{padding:8px 18px;background:var(--y);border:none;font-size:12px;font-weight:700;cursor:pointer;border-radius:4px;font-family:inherit;color:var(--blk);letter-spacing:.03em;transition:background .2s}
+.nav-btn-signup:hover{background:var(--yd)}
+
+/* ── HERO ── */
+.hero{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:120px 40px 48px;background:var(--wh);position:relative;overflow:hidden}
+.hero-top-line{position:absolute;top:64px;left:0;right:0;height:3px;background:var(--y)}
+.hero-eyebrow{font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:.28em;color:var(--y);text-transform:uppercase;margin-bottom:14px;font-weight:600}
+.hero-title{font-family:'DM Sans',sans-serif;font-size:clamp(40px,7.5vw,96px);font-weight:700;color:var(--blk);letter-spacing:-.03em;line-height:1.05;text-align:center;margin-bottom:8px;white-space:nowrap}
+.hero-title .acc{color:var(--y)}.hero-title{margin-bottom:10px}.hero-brand{font-family:'DM Sans',sans-serif;font-size:clamp(16px,2vw,22px);font-weight:700;letter-spacing:.35em;color:var(--y);text-align:center;margin-bottom:0;text-transform:uppercase;opacity:.85}
+.hero-sub{font-size:clamp(13px,1.8vw,16px);color:var(--g3);text-align:center;font-weight:400;letter-spacing:.04em;margin-bottom:36px;margin-top:16px;line-height:1.7}
+.hero-prompt{font-size:12px;color:var(--g3);letter-spacing:.1em;text-align:center;margin-bottom:16px;font-weight:500}
+.hero-reon-brand{font-family:'DM Sans',sans-serif;font-size:clamp(22px,3vw,32px);font-weight:700;letter-spacing:.3em;color:var(--blk);text-align:center;text-transform:uppercase;margin-bottom:0;opacity:.18;line-height:1}
+
+/* ── CIRCLE CATEGORY GRID ── */
+.cat-section{width:100%;max-width:1040px;margin:0 auto}
+.cat-circles{display:grid;grid-template-columns:repeat(4,1fr);gap:24px 16px;max-width:680px;margin:0 auto}
+.cat-circles .cat-row-3{display:contents}
+.cat-circle{display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer;width:130px}
+.cat-circle-img{width:110px;height:110px;border-radius:50%;background:var(--g5);border:2.5px solid transparent;display:flex;align-items:center;justify-content:center;transition:all .28s}
+.cat-circle-img svg{width:40px;height:40px;fill:var(--y);stroke:var(--y);stroke-width:0;transition:all .25s}.cat-circle-img svg line,.cat-circle-img svg path[stroke-width],.cat-circle-img svg circle{stroke:var(--y);fill:none;stroke-linecap:round;stroke-linejoin:round}.cat-circle:hover .cat-circle-img svg line,.cat-circle:hover .cat-circle-img svg path[stroke-width],.cat-circle:hover .cat-circle-img svg circle{stroke:var(--blk)}.cat-circle-img.active-cat svg line,.cat-circle-img.active-cat svg path[stroke-width],.cat-circle-img.active-cat svg circle{stroke:var(--blk)}
+.cat-circle:hover .cat-circle-img{background:#EBEBEB;border-color:var(--y);transform:translateY(-6px);box-shadow:0 12px 32px rgba(245,196,0,.22)}
+.cat-circle:hover .cat-circle-img svg{fill:var(--blk);stroke:var(--blk)}
+.cat-circle-img.active-cat{background:var(--y);border-color:var(--yd);box-shadow:0 8px 28px rgba(245,196,0,.4)}
+.cat-circle-img.active-cat svg{fill:var(--blk);stroke:var(--blk)}
+.cat-circle-name{font-size:13px;font-weight:700;color:var(--g2);text-align:center;letter-spacing:-.02em;line-height:1.45}
+.cat-circle:hover .cat-circle-name{color:var(--blk)}
+
+/* sub-category dropdown */
+.sub-section{width:100%;max-width:900px;margin:24px auto 0;display:none}
+.sub-section.open{display:block}
+.sub-title{font-size:12px;font-weight:700;color:var(--g3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;text-align:center}
+.sub-chips{display:flex;flex-wrap:wrap;gap:10px 8px;justify-content:center}
+.sub-chip{padding:8px 18px;border:1.5px solid var(--g4);background:var(--wh);font-size:13px;font-weight:500;color:var(--g1);cursor:pointer;border-radius:30px;transition:all .2s;font-family:inherit}
+.sub-chip:hover{border-color:var(--y);background:var(--yp);color:var(--blk)}
+.sub-chip.sel{border-color:var(--y);background:var(--y);color:var(--blk);font-weight:700}
+.sub-input-wrap{display:flex;gap:8px;align-items:center;margin-top:8px;justify-content:center}
+.sub-input{border:1.5px solid var(--g4);padding:8px 14px;font-size:13px;font-family:inherit;outline:none;border-radius:30px;transition:border-color .2s;width:200px}
+.sub-input:focus{border-color:var(--y)}
+.sub-go-btn{background:var(--y);color:var(--blk);border:none;font-size:13px;font-weight:700;padding:8px 20px;border-radius:30px;cursor:pointer;font-family:inherit;transition:background .2s}
+.sub-go-btn:hover{background:var(--yd)}
+
+.scroll-hint{display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--g4);font-size:11px;letter-spacing:.1em;margin-top:24px;animation:bob 2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+/* ── SECTIONS ── */
+.hs{padding:80px 48px}
+.hs.light{background:var(--wh)}
+.hs.gray{background:#F8F8F6}
+.hs-inner{max-width:1060px;margin:0 auto}
+.sec-eye{font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:.22em;color:var(--y);text-transform:uppercase;font-weight:700;margin-bottom:10px}
+.sec-ttl{font-size:clamp(22px,3.5vw,34px);font-weight:700;color:var(--blk);letter-spacing:-.02em;margin-bottom:16px;line-height:1.25}
+.sec-desc{font-size:14px;color:var(--g2);line-height:1.8;max-width:560px}
+
+/* SERVICE CARDS */
+.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
+.svc-card{background:var(--wh);border:1px solid var(--g5);border-radius:8px;padding:24px 20px;transition:all .25s;cursor:pointer}
+.svc-card:hover{border-color:var(--y);box-shadow:0 4px 20px rgba(245,196,0,.15);transform:translateY(-2px)}
+.svc-card-icon{font-size:28px;margin-bottom:14px;display:block}
+.svc-card-name{font-size:14px;font-weight:700;color:var(--blk);margin-bottom:6px}
+.svc-card-desc{font-size:12px;color:var(--g3);line-height:1.65}
+.svc-card-tag{display:inline-block;font-size:10px;font-weight:700;color:var(--yd);background:var(--yp);padding:2px 8px;border-radius:3px;margin-top:10px;letter-spacing:.04em}
+
+/* WHY — 위트 섹션 */
+.wit-section{background:var(--blk);padding:56px 48px}
+.wit-inner{max-width:1060px;margin:0 auto}
+.wit-eyebrow{font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:.22em;color:var(--y);text-transform:uppercase;font-weight:700;margin-bottom:16px}
+.wit-title{font-size:clamp(26px,4vw,48px);font-weight:700;color:var(--wh);letter-spacing:-.03em;line-height:1.1;margin-bottom:48px}
+.wit-title .hl{color:var(--y)}
+.wit-quote-top{font-size:clamp(34px,5vw,64px);color:rgba(255,255,255,.92);letter-spacing:-.03em;margin-bottom:32px;line-height:1.3;font-weight:700}.wit-sub{font-size:20px;color:#ffffff;line-height:1.6;max-width:680px;margin-bottom:48px;font-weight:400;letter-spacing:-.01em}
+.wit-list{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.wit-item{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:26px 28px;border-left:3px solid var(--y)}
+.wit-item-title{font-size:18px;font-weight:700;color:var(--wh);margin-bottom:10px}
+.wit-item-desc{font-size:15px;color:rgba(255,255,255,.55);line-height:1.75}
+
+
+/* PROCESS */
+.proc-grid{display:grid;grid-template-columns:repeat(3,1fr);position:relative;margin-top:40px}
+.proc-grid::before{content:'';position:absolute;top:36px;left:calc(16.66% + 24px);right:calc(16.66% + 24px);height:2px;background:repeating-linear-gradient(90deg,var(--y) 0,var(--y) 8px,transparent 8px,transparent 16px)}
+.proc-step{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 14px}
+.proc-dot{width:72px;height:72px;background:var(--y);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif;font-size:22px;font-weight:700;color:var(--blk);margin-bottom:24px;position:relative;z-index:1}
+.proc-name{font-size:18px;font-weight:700;color:var(--blk);margin-bottom:9px}
+.proc-det{font-size:15px;color:var(--g3);line-height:1.7}
+
+/* CTA */
+.cta-sec{background:var(--y);padding:72px 48px;text-align:center}
+.cta-sec h2{font-family:'DM Sans',sans-serif;font-size:clamp(24px,4.5vw,46px);font-weight:700;color:var(--blk);letter-spacing:-.03em;margin-bottom:12px;line-height:1.1}
+.cta-sec p{font-size:14px;color:rgba(0,0,0,.5);margin-bottom:32px;line-height:1.7}
+.cta-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn-dark{background:var(--blk);color:var(--wh);font-size:14px;font-weight:700;padding:14px 32px;border:none;cursor:pointer;letter-spacing:.04em;border-radius:6px;transition:opacity .2s;font-family:inherit}
+.btn-dark:hover{opacity:.8}
+
+/* FOOTER */
+.site-footer{background:var(--blk);padding:32px 48px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,.06)}
+.f-logo{font-family:'Noto Sans KR','DM Sans',sans-serif;font-size:17px;font-weight:700;color:var(--wh);letter-spacing:.08em}
+.f-logo span{color:var(--y)}
+.f-copy{font-size:11px;color:rgba(255,255,255,.22);letter-spacing:.04em}
+
+/* BOOKING PAGE (간소화 유지) */
+#page-booking{background:var(--bg);padding-top:64px}
+.bk-wrap{max-width:720px;margin:0 auto;padding:32px 20px 100px}
+.prog-bar{display:flex;align-items:center;margin-bottom:32px}
+.ps{display:flex;align-items:center;gap:8px;flex:1}
+.pd{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;background:var(--g5);color:var(--g3);transition:all .3s}
+.pd.done{background:var(--y);color:var(--blk)}.pd.cur{background:var(--blk);color:var(--wh);box-shadow:0 0 0 3px rgba(245,196,0,.3)}
+.pl{font-size:11px;color:var(--g3);font-weight:500;white-space:nowrap}.pl.cur{color:var(--blk);font-weight:700}
+.pline{flex:1;height:2px;background:var(--g5);margin:0 6px}.pline.done{background:var(--y)}
+.sp{display:none}.sp.active{display:block}
+.sp-ttl{font-size:20px;font-weight:700;color:var(--blk);margin-bottom:4px;letter-spacing:-.02em}
+.sp-sub{font-size:13px;color:var(--g2);margin-bottom:22px}
+.sub-list{display:flex;flex-direction:column;gap:8px}
+.si{background:var(--wh);border:1.5px solid var(--g4);border-radius:6px;overflow:hidden;cursor:pointer;transition:all .2s}
+.si:hover{border-color:var(--y)}.si.sel{border-color:var(--y);box-shadow:0 0 0 2px var(--y)}
+.si-hdr{display:flex;align-items:center;gap:10px;padding:13px 14px}
+.si-chk{width:18px;height:18px;border-radius:50%;border:2px solid var(--g4);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;transition:all .2s}
+.si.sel .si-chk{background:var(--y);border-color:var(--y);color:var(--blk)}
+.si-info{flex:1}.si-name{font-size:13px;font-weight:600;color:var(--blk)}
+.si-chips{display:flex;gap:6px;align-items:center;margin-top:4px;flex-wrap:wrap}
+.chip{font-size:11px;font-weight:600;padding:2px 8px;border-radius:3px}
+.chip-m{background:#E3F2FD;color:var(--blue)}.chip-l{background:#FFF3E0;color:var(--orange)}.chip-t{background:var(--yp);color:var(--yd);font-weight:700}
+.si-arr{font-size:13px;color:var(--g4);transition:all .2s}.si:hover .si-arr{color:var(--yd)}
+.si-bd{background:var(--bg);border-top:1px solid var(--g4);padding:12px 14px 14px;display:none}
+.si.sel .si-bd{display:block}
+.bd-ttl{font-size:10px;font-weight:700;color:var(--g3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+.bd-row{display:flex;justify-content:space-between;font-size:12px;color:var(--g2);padding:5px 0;border-bottom:1px solid var(--g5)}
+.bd-row:last-child{border-bottom:none;color:var(--blk);font-weight:700;font-size:13px;padding-top:6px}
+.bd-note{font-size:11px;color:var(--g3);margin-top:8px;line-height:1.6}
+.total-bar{background:var(--blk);border-radius:8px;padding:16px 20px;margin-top:16px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.tb-l{flex:1}.tb-items{font-size:12px;color:rgba(255,255,255,.75);margin-bottom:3px;line-height:1.5}.tb-items.has{color:var(--y);font-weight:600}
+.tb-note{font-size:11px;color:rgba(255,255,255,.75)}
+.tb-r{text-align:right;flex-shrink:0}.tb-lbl{font-size:10px;letter-spacing:.1em;color:#ffffff;font-weight:600;text-transform:uppercase;margin-bottom:2px}
+.tb-num{font-family:'DM Sans',sans-serif;font-size:24px;font-weight:700;color:var(--y);line-height:1}.tb-num.mt{color:rgba(255,255,255,.75);font-size:18px}
+.tb-vat{font-size:11px;color:rgba(255,255,255,.75);margin-top:2px}
+.cal-box{background:var(--wh);border:1px solid var(--g4);border-radius:6px;padding:18px;margin-bottom:16px;user-select:none}
+.cal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.cal-nav-btn{background:none;border:none;cursor:pointer;font-size:16px;color:var(--g2);padding:4px 8px}.cal-nav-btn:hover{color:var(--blk)}
+.cal-mo{font-size:14px;font-weight:700}
+.cal-g{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-dn{text-align:center;font-size:11px;font-weight:600;color:var(--g3);padding:4px 0}
+.cal-d{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:12px;border-radius:50%;cursor:pointer;transition:all .15s;color:var(--blk)}
+.cal-d:hover:not(.dis){background:var(--yp)}.cal-d.sel{background:var(--y);font-weight:700}.cal-d.tod{border:2px solid var(--y);font-weight:700}.cal-d.dis{color:var(--g4);cursor:not-allowed}
+.fg{display:flex;flex-direction:column;gap:10px;margin-bottom:26px}
+.fl{font-size:12px;font-weight:700;color:var(--g1)}
+.fi{border:1.5px solid var(--g4);padding:11px 14px;font-size:13px;font-family:inherit;outline:none;border-radius:4px;transition:border-color .2s;width:100%}.fi:focus{border-color:var(--y)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sum-card{background:var(--wh);border:1px solid var(--g4);border-radius:6px}
+.sum-row{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 16px;border-bottom:1px solid var(--g5);font-size:13px}
+.sum-row:last-child{border-bottom:none}.sum-k{color:var(--g2);font-weight:500}.sum-v{color:var(--blk);font-weight:700;text-align:right;max-width:60%}
+.sum-total{background:var(--yp);border:1.5px solid var(--y);border-radius:6px;padding:14px 16px;margin:12px 16px;display:flex;justify-content:space-between;align-items:center}
+.sum-tl{font-size:13px;font-weight:600;color:var(--g1)}.sum-tn{font-family:'DM Sans',sans-serif;font-size:22px;font-weight:700;color:var(--blk)}
+.step-nav{display:flex;gap:10px;margin-top:24px}
+.btn-next{flex:1;background:var(--y);color:var(--blk);font-size:14px;font-weight:700;padding:14px;border:none;cursor:pointer;border-radius:6px;font-family:inherit;transition:background .2s;letter-spacing:.04em}
+.btn-next:hover{background:var(--yd)}.btn-next:disabled{background:var(--g4);color:var(--g3);cursor:not-allowed}
+.btn-back{padding:14px 18px;background:var(--wh);border:1.5px solid var(--g4);font-size:13px;color:var(--g2);cursor:pointer;border-radius:6px;font-family:inherit;transition:all .2s}
+.btn-back:hover{border-color:var(--blk);color:var(--blk)}
+.ok-box{text-align:center;padding:60px 20px}
+.ok-icon{width:72px;height:72px;border-radius:50%;background:var(--y);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 20px}
+.ok-code{display:inline-block;background:var(--yp);border:2px solid var(--y);font-family:'DM Sans',monospace;font-size:22px;font-weight:700;letter-spacing:.1em;padding:12px 28px;margin:16px 0;border-radius:6px}
+.b-cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.b-cat{background:var(--wh);border:1.5px solid var(--g4);padding:18px 14px 14px;cursor:pointer;text-align:left;transition:all .2s;border-radius:6px}
+.b-cat:hover{border-color:var(--y);background:var(--yp)}.b-cat.sel{border-color:var(--y);background:var(--yp);box-shadow:0 0 0 2px var(--y)}
+.b-cat-icon{font-size:22px;display:block;margin-bottom:8px}.b-cat-name{font-size:13px;font-weight:700;display:block;margin-bottom:3px}.b-cat-hint{font-size:11px;color:var(--g3);line-height:1.5}
+
+/* WORKER */
+#page-worker{background:var(--bg);padding-top:64px}
+.auth-wrap{max-width:460px;margin:0 auto;padding:40px 20px}
+.auth-card{background:var(--wh);border:1px solid var(--g4);border-radius:10px;padding:28px}
+.auth-logo{font-family:'Noto Sans KR','DM Sans',sans-serif;font-size:24px;font-weight:700;letter-spacing:.08em;text-align:center;margin-bottom:4px}
+.auth-logo span{color:var(--y)}.auth-asub{font-size:12px;color:var(--g3);text-align:center;margin-bottom:24px;letter-spacing:.04em}
+.auth-tabs{display:flex;margin-bottom:22px;border:1.5px solid var(--g4);border-radius:6px;overflow:hidden}
+.at{flex:1;padding:10px;text-align:center;font-size:13px;font-weight:600;cursor:pointer;border:none;background:var(--wh);color:var(--g3);transition:all .2s;font-family:inherit}
+.at.active{background:var(--y);color:var(--blk)}
+.spec-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:16px}
+.spec-btn{border:1.5px solid var(--g4);background:var(--wh);padding:10px 12px;cursor:pointer;border-radius:6px;text-align:left;transition:all .2s;font-family:inherit}
+.spec-btn:hover{border-color:var(--y);background:var(--yp)}.spec-btn.sel{border-color:var(--y);background:var(--yp);box-shadow:0 0 0 2px var(--y)}
+.sp-icon{font-size:18px;display:block;margin-bottom:4px}.sp-name{font-size:12px;font-weight:700;color:var(--blk);display:block}.sp-sub{font-size:10px;color:var(--g3);line-height:1.4;margin-top:2px}
+.err-msg{font-size:12px;color:var(--red);margin-top:10px;text-align:center;min-height:18px}
+
+/* DASHBOARD */
+#page-dash{background:var(--bg);padding-top:64px}
+.dash-wrap{max-width:1120px;margin:0 auto;padding:24px 20px 60px}
+.dash-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.dash-ttl{font-size:19px;font-weight:700}.dash-stl{font-size:12px;color:var(--g2);margin-top:3px}
+.w-badge{display:inline-flex;align-items:center;gap:6px;background:var(--yp);border:1px solid var(--y);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;color:var(--yd)}
+.btn-logout{background:var(--wh);color:var(--g2);border:1.5px solid var(--g4);font-size:12px;padding:7px 16px;cursor:pointer;border-radius:4px;font-family:inherit;transition:all .2s}
+.btn-logout:hover{border-color:var(--red);color:var(--red)}
+.spec-banner{display:flex;align-items:center;gap:10px;background:var(--blk);color:var(--wh);padding:10px 16px;border-radius:6px;margin-bottom:16px;font-size:13px}
+.spec-banner strong{color:var(--y)}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.stat-card{background:var(--wh);border:1px solid var(--g4);padding:14px 16px;border-radius:6px}
+.stat-num{font-family:'DM Sans',sans-serif;font-size:26px;font-weight:700;color:var(--blk)}.stat-lbl{font-size:11px;color:var(--g3);font-weight:500;margin-top:2px}
+.stat-card.hl{background:var(--y);border-color:var(--y)}.stat-card.hl .stat-lbl{color:rgba(0,0,0,.55)}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.fbtn{padding:5px 14px;border:1.5px solid var(--g4);background:var(--wh);font-size:12px;font-weight:600;cursor:pointer;border-radius:20px;transition:all .2s;font-family:inherit}
+.fbtn:hover{border-color:var(--y)}.fbtn.active{background:var(--y);border-color:var(--y);color:var(--blk)}
+.dash-grid{display:grid;grid-template-columns:300px 1fr;gap:18px;align-items:start}
+.mini-cal{background:var(--wh);border:1px solid var(--g4);border-radius:6px;padding:14px;margin-bottom:12px;user-select:none}
+.mc-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.mc-mo{font-size:13px;font-weight:700}.mn-btn{background:none;border:none;cursor:pointer;color:var(--g2);font-size:14px;padding:2px 6px}
+.mc-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px}
+.mc-dn{text-align:center;font-size:10px;color:var(--g3);font-weight:600;padding:2px 0}
+.mc-d{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:11px;border-radius:50%;cursor:pointer;position:relative;transition:background .15s;color:var(--blk)}
+.mc-d:hover:not(.emp):not(.pst){background:var(--yp)}.mc-d.seld{background:var(--y);font-weight:700}.mc-d.todm{border:2px solid var(--y);font-weight:700}
+.mc-d.hasj::after{content:'';position:absolute;bottom:1px;width:4px;height:4px;border-radius:50%;background:var(--red)}
+.mc-d.seld.hasj::after{background:var(--blk)}.mc-d.emp,.mc-d.pst{color:var(--g4);cursor:default}
+.job-list{display:flex;flex-direction:column;gap:8px}
+.jcard{background:var(--wh);border:1px solid var(--g4);border-radius:6px;padding:14px 16px;cursor:pointer;transition:all .2s;border-left:4px solid transparent}
+.jcard:hover{box-shadow:0 2px 8px rgba(0,0,0,.07)}.jcard.new{border-left-color:var(--red)}.jcard.contacted{border-left-color:var(--y)}.jcard.done{border-left-color:var(--green);opacity:.75}
+.j-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px}
+.j-badge{font-size:10px;font-weight:700;letter-spacing:.06em;padding:3px 8px;border-radius:3px}
+.b-new{background:#FFEBEE;color:var(--red)}.b-cont{background:var(--yp);color:var(--yd)}.b-confirmed{background:#E3F2FD;color:#1565C0}.b-done{background:#E8F5E9;color:var(--green)}
+.j-code{font-size:10px;color:var(--g3);font-family:'DM Sans',monospace}
+.j-title{font-size:13px;font-weight:700;color:var(--blk);margin-bottom:4px}
+.j-meta{font-size:11px;color:var(--g2);display:flex;gap:10px;flex-wrap:wrap}
+.j-price{font-size:11px;font-weight:700;color:var(--yd);background:var(--yp);padding:2px 8px;border-radius:3px;margin-top:4px;display:inline-block}
+.det-panel{background:var(--wh);border:1px solid var(--g4);border-radius:6px;padding:22px;position:sticky;top:72px}
+.det-empty{text-align:center;padding:48px 16px;color:var(--g3)}
+.det-tag{display:inline-block;background:var(--y);color:var(--blk);font-size:11px;font-weight:700;letter-spacing:.08em;padding:3px 10px;margin-bottom:10px;border-radius:2px}
+.det-ttl{font-size:18px;font-weight:700;margin-bottom:14px;letter-spacing:-.02em}
+.det-rows{display:flex;flex-direction:column;margin-bottom:16px}
+.drow{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--g5);font-size:12px}.drow:last-child{border-bottom:none}
+.dk{color:var(--g2);min-width:72px;font-weight:500;flex-shrink:0}.dv{color:var(--blk);font-weight:600}
+.price-box{background:var(--yp);border:1.5px solid var(--y);border-radius:6px;padding:14px;margin-bottom:16px}
+.pb-ttl{font-size:10px;font-weight:700;color:var(--g3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+.pb-row{display:flex;justify-content:space-between;font-size:12px;color:var(--g2);padding:4px 0;border-bottom:1px solid rgba(245,196,0,.3)}
+.pb-row:last-child{border-bottom:none;color:var(--blk);font-weight:700;font-size:14px;padding-top:6px}
+.act-btns{display:flex;flex-direction:column;gap:8px}
+.btn-contact{background:var(--y);color:var(--blk);border:none;font-size:13px;font-weight:700;padding:12px;cursor:pointer;border-radius:4px;font-family:inherit;transition:background .2s}
+.btn-contact:hover{background:var(--yd)}
+.btn-done-a{background:var(--wh);color:var(--green);border:1.5px solid var(--green);font-size:13px;font-weight:700;padding:11px;cursor:pointer;border-radius:4px;font-family:inherit;transition:all .2s}
+.btn-done-a:hover{background:#E8F5E9}
+.empty-state{background:var(--wh);border:1px solid var(--g4);border-radius:6px;padding:48px;text-align:center;color:var(--g3)}
+
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--blk);color:var(--wh);font-size:13px;font-weight:500;padding:12px 24px;border-radius:6px;opacity:0;transition:all .3s;z-index:9999;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:768px){
+  .top-nav{padding:0 20px}.nav-links{display:none}
+  .hero{padding:100px 16px 40px}
+  .cat-circles{gap:18px 8px}.cat-circle{width:78px}.cat-circle-img{width:64px;height:64px;font-size:22px}
+  .cat-circle-img svg{width:30px;height:30px}
+  .cat-circle-name{font-size:11px}
+  .svc-grid{grid-template-columns:1fr}
+  .proc-grid{grid-template-columns:1fr;gap:0;position:relative}
+  .proc-grid::before{display:none}
+  .proc-step{flex-direction:row;text-align:left;align-items:flex-start;gap:18px;padding:0 0 32px;position:relative}
+  .proc-step::before{content:'';position:absolute;left:35px;top:72px;bottom:-4px;width:2px;background:repeating-linear-gradient(180deg,var(--y) 0,var(--y) 8px,transparent 8px,transparent 16px)}
+  .proc-step:last-child::before{display:none}
+  .proc-step:last-child{padding-bottom:0}
+  .proc-dot{margin-bottom:0;flex-shrink:0}
+  .proc-step>div:not(.proc-dot){min-width:0;flex:1}
+  .proc-name{margin-top:8px;font-size:16px;word-break:keep-all}
+  .proc-det{font-size:13px}
+  .wit-list{grid-template-columns:1fr}.stats-row{grid-template-columns:repeat(2,1fr)}.dash-grid{grid-template-columns:1fr}.det-panel{display:none}
+  .frow{grid-template-columns:1fr}.site-footer{flex-direction:column;gap:10px;text-align:center}
+  .hs{padding:60px 20px}.wit-section{padding:60px 20px}.cta-sec{padding:60px 20px}
+  .hero-title{white-space:normal;font-size:clamp(34px,9.5vw,44px)}
+  .hero-dgd{font-size:30px !important}
+  .hero-dgd-item{gap:2px !important}
+  .hero-dgd-dot{width:5px !important;height:5px !important}
+}
+</style>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="top-nav" id="main-nav">
+  <div class="nav-logo" onclick="goPage('home')"><span>다</span><span style="color:var(--blk)">공</span><span>다</span></div>
+  
+  <div class="nav-right">
+    <button class="nav-btn-login" onclick="goPage('worker')">로그인</button>
+    <button class="nav-btn-signup" onclick="goPage('worker');setTimeout(()=>setATab('signup',document.querySelectorAll('.at')[1]),50)">회원가입</button>
+  </div>
+</nav>
+
+<!-- 프로모션 팝업 -->
+<div id="promo-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9500;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)closePromo()">
+  <div style="background:var(--wh);border-radius:14px;max-width:380px;width:100%;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3)">
+    <div style="position:relative;background:var(--y);padding:36px 28px 28px;text-align:center">
+      <button onclick="closePromo()" style="position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,.12);border:none;font-size:14px;cursor:pointer;color:var(--blk);line-height:1">✕</button>
+      <div style="font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:700;letter-spacing:.2em;color:rgba(0,0,0,.55);margin-bottom:10px">PROMOTION</div>
+      <div style="font-size:26px;font-weight:700;color:var(--blk);line-height:1.3;letter-spacing:-.02em">첫 시공 의뢰<br>견적 상담 무료</div>
+    </div>
+    <div style="padding:24px 28px 28px">
+      <p style="font-size:13px;color:var(--g2);line-height:1.7;text-align:center;margin-bottom:20px">지금 다공다에서 시공을 신청하시면<br>방문 견적부터 상담까지 전부 무료로 진행됩니다.<br>이 기간 한정 혜택을 놓치지 마세요!</p>
+      <button class="btn-dark" style="width:100%" onclick="closePromo();fromHome=false;goPage('booking')">지금 신청하기</button>
+      <label style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:16px;font-size:12px;color:var(--g3);cursor:pointer">
+        <input type="checkbox" id="promo-hide-today" style="width:14px;height:14px;cursor:pointer">
+        오늘 하루 보지 않기
+      </label>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ HOME ═══ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-top-line"></div>
+    <p class="hero-eyebrow">Interior · Renovation · Repair</p>
+    <h1 class="hero-title"><span class="acc">다시</span> 공간을 <span class="acc">켜다</span></h1>
+    <div class="hero-dgd" style="font-family:'Noto Sans KR',sans-serif;font-size:clamp(36px,4.5vw,54px);font-weight:700;letter-spacing:.08em;text-align:center;margin-top:16px;margin-bottom:44px;line-height:1;display:block;position:relative">
+      <div style="display:flex;justify-content:center">
+        <span class="hero-dgd-item" style="display:inline-flex;flex-direction:column;align-items:center;gap:4px"><span class="hero-dgd-dot" style="width:8px;height:8px;border-radius:50%;background:#111111;display:inline-block"></span><span style="color:#f9ba0d">다</span></span>
+        <span class="hero-dgd-item" style="display:inline-flex;flex-direction:column;align-items:center;gap:4px"><span class="hero-dgd-dot" style="width:8px;height:8px;border-radius:50%;background:#111111;display:inline-block"></span><span style="color:#111111">공</span></span>
+        <span class="hero-dgd-item" style="display:inline-flex;flex-direction:column;align-items:center;gap:4px"><span class="hero-dgd-dot" style="width:8px;height:8px;border-radius:50%;background:#111111;display:inline-block"></span><span style="color:#f9ba0d">다</span></span>
+      </div>
+    </div>
+
+    <!-- 원형 카테고리 -->
+    <div class="cat-section" style="margin-top:0">
+      <div class="cat-circles" id="cat-circles" style="display:flex;flex-direction:column;align-items:center;gap:24px">
+        <!-- 1행: 4개 -->
+        <div style="display:flex;gap:16px;justify-content:center">
+          <div class="cat-circle" onclick="toggleCat(this,'주거 인테리어')">
+            <div class="cat-circle-img"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 10.5L12 4l9 6.5V21H15v-6H9v6H3V10.5z"/></svg></div>
+            <div class="cat-circle-name">주거 인테리어</div>
+          </div>
+          <div class="cat-circle" onclick="toggleCat(this,'상업 인테리어')">
+            <div class="cat-circle-img"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 3h16v4H4V3zm-2 4h20l-1 13H3L2 7zm7 5v6h6v-6H9z"/></svg></div>
+            <div class="cat-circle-name">상업 인테리어</div>
+          </div>
+          <div class="cat-circle" onclick="toggleCat(this,'욕실 공사')">
+            <div class="cat-circle-img"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="7.5" y="5.5" width="9" height="4" rx="1.5"/><rect x="9" y="9" width="6" height="2.5" rx="1"/><path d="M6.5 13c0-1 .8-1.5 1.8-1.5h7.4c1 0 1.8.5 1.8 1.5v3.8c0 3.6-2.4 6.2-5.5 6.2s-5.5-2.6-5.5-6.2V13z"/></svg></div>
+            <div class="cat-circle-name">욕실 공사</div>
+          </div>
+          <div class="cat-circle" onclick="toggleCat(this,'가구 공사')">
+            <div class="cat-circle-img"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="5" width="18" height="9" rx="1"/><rect x="5" y="14" width="4" height="5"/><rect x="15" y="14" width="4" height="5"/><rect x="2" y="13" width="20" height="3" rx="1"/></svg></div>
+            <div class="cat-circle-name">가구 공사</div>
+          </div>
+        </div>
+        <!-- 2행: 3개 -->
+        <div style="display:flex;gap:16px;justify-content:center">
+          <div class="cat-circle" onclick="toggleCat(this,'도배·필름')">
+            <div class="cat-circle-img"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 5c1.2 1.4 1.2 3 0 4.4 1.2 1.4 1.2 3 0 4.4 1.2 1.4 1.2 3 0 4.4M8 5c1.2 1.4 1.2 3 0 4.4 1.2 1.4 1.2 3 0 4.4 1.2 1.4 1.2 3 0 4.4M13 5c1.2 1.4 1.2 3 0 4.4 1.2 1.4 1.2 3 0 4.4 1.2 1.4 1.2 3 0 4.4M18 5c1.2 1.4 1.2 3 0 4.4 1.2 1.4 1.2 3 0 4.4 1.2 1.4 1.2 3 0 4.4" fill="none" stroke-width="2"/></svg></div>
+            <div class="cat-circle-name">도배 · 필름</div>
+          </div>
+          <div class="cat-circle" onclick="toggleCat(this,'바닥 공사')">
+            <div class="cat-circle-img"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="14" width="20" height="6" rx="1"/><rect x="2" y="9" width="20" height="4" rx="0.5" opacity=".5"/><rect x="2" y="5" width="20" height="3" rx="0.5" opacity=".25"/></svg></div>
+            <div class="cat-circle-name">바닥 공사</div>
+          </div>
+          <div class="cat-circle" onclick="toggleCat(this,'기타 시공')">
+            <div class="cat-circle-img"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="2.5"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" stroke-width="2" stroke-linecap="round"/></svg></div>
+            <div class="cat-circle-name">기타 시공</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 소분류 영역 -->
+      <div class="sub-section" id="sub-section">
+        <div class="sub-title" id="sub-title">소분류 선택</div>
+        <div class="sub-chips" id="sub-chips"></div>
+        <div class="sub-input-wrap" id="sub-input-wrap" style="display:none">
+          <input class="sub-input" id="sub-other-input" placeholder="직접 입력해 주세요">
+          <button class="sub-go-btn" onclick="goBookingFromSub()">다음 단계 →</button>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <div style="height:64px;background:var(--wh)"></div>
+
+  <!-- WIT SECTION -->
+  <div class="wit-section" id="svc-sec">
+    <div class="wit-inner">
+      <div class="wit-quote-top">"이런 것도 될까?"<br>"이거 하나 하기엔 비용이 너무 부담돼"</div>
+      <div class="wit-title">변기 하나도<br><span class="hl">문제 없이 교체 가능합니다</span></div>
+      <div class="wit-list">
+        <div class="wit-item">
+          <div class="wit-item-title">투명한 견적</div>
+          <div class="wit-item-desc">항목별 분리 견적서 제공. 바로 확인 할 수 있는 자동 견적 적용됩니다.</div>
+        </div>
+        <div class="wit-item">
+          <div class="wit-item-title">부분, 단품 시공도 문제 없습니다</div>
+          <div class="wit-item-desc">변기하나, 조명 하나 교체도 가능합니다.</div>
+        </div>
+        <div class="wit-item">
+          <div class="wit-item-title">직영팀 직접 시공</div>
+          <div class="wit-item-desc">검증된 자사 팀이 처음부터 끝까지 직접 시공합니다.</div>
+        </div>
+        <div class="wit-item">
+          <div class="wit-item-title">약속된 날짜에 시공진행</div>
+          <div class="wit-item-desc">스케쥴표에서 희망 날짜를 선택 후 확정만 하시면 됩니다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROCESS -->
+  <div class="hs light" id="proc-sec">
+    <div class="hs-inner">
+      <div class="sec-ttl">일정 컨택부터 시공까지<br>편리하게 진행됩니다</div>
+      <div class="proc-grid">
+        <div class="proc-step"><div class="proc-dot">01</div><div class="proc-name">시공 & 날짜 선택</div><div class="proc-det">원하는 시공과<br>날짜를 선택해요</div></div>
+        <div class="proc-step"><div class="proc-dot">02</div><div class="proc-name">자동 견적 확인</div><div class="proc-det">자동 견적 또는 방문 ·<br>사진으로 무료 견적 제공</div></div>
+        <div class="proc-step"><div class="proc-dot">03</div><div class="proc-name">시공 진행</div><div class="proc-det">확정 일정에<br>시공자 투입</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-sec">
+    <h2>지금 바로<br>다공다 경험해 보세요!</h2>
+    <div class="cta-row">
+      <button class="btn-dark" onclick="fromHome=false;goPage('booking')">시공신청하기</button>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="f-logo"><span>다</span><span style="color:var(--wh)">공</span><span>다</span></div>
+    <div class="f-copy">© 2025 다공다. All rights reserved. · 사업자등록번호 000-00-00000</div>
+  </footer>
+</div>
+
+<!-- ═══ BOOKING ═══ -->
+<div class="page" id="page-booking">
+<div class="bk-wrap">
+  <div class="prog-bar">
+    <div class="ps"><div class="pd cur" id="pd1">1</div><span class="pl cur" id="pl1">대분류</span></div>
+    <div class="pline" id="pln1"></div>
+    <div class="ps"><div class="pd" id="pd2">2</div><span class="pl" id="pl2">세부 서비스</span></div>
+    <div class="pline" id="pln2"></div>
+    <div class="ps"><div class="pd" id="pd3">3</div><span class="pl" id="pl3">날짜 · 정보</span></div>
+    <div class="pline" id="pln3"></div>
+    <div class="ps"><div class="pd" id="pd4">4</div><span class="pl" id="pl4">확인 · 접수</span></div>
+  </div>
+  <div class="sp active" id="sp1">
+    <div class="sp-ttl">어떤 공사가 필요하신가요?</div>
+    <div class="sp-sub">해당하는 카테고리를 선택해 주세요</div>
+    <div class="b-cat-grid">
+      <div class="b-cat" onclick="selCat(this,'주거 인테리어','🏠')"><span class="b-cat-icon">🏠</span><span class="b-cat-name">주거 인테리어</span><span class="b-cat-hint">아파트·빌라·오피스텔·주택</span></div>
+      <div class="b-cat" onclick="selCat(this,'상업 인테리어','🏪')"><span class="b-cat-icon">🏪</span><span class="b-cat-name">상업 인테리어</span><span class="b-cat-hint">카페·식당·병원·사무실</span></div>
+      <div class="b-cat" onclick="selCat(this,'욕실 공사','🚿')"><span class="b-cat-icon">🚿</span><span class="b-cat-name">욕실 공사</span><span class="b-cat-hint">전체교체·부분수리·방수</span></div>
+      <div class="b-cat" onclick="selCat(this,'가구 공사','🪑')"><span class="b-cat-icon">🪑</span><span class="b-cat-name">가구 공사</span><span class="b-cat-hint">붙박이·신발장·주방·팬트리</span></div>
+      <div class="b-cat" onclick="selCat(this,'도배·필름','🎨')"><span class="b-cat-icon">🎨</span><span class="b-cat-name">도배 · 필름</span><span class="b-cat-hint">합지·실크·도배필름</span></div>
+      <div class="b-cat" onclick="selCat(this,'바닥 공사','🪵')"><span class="b-cat-icon">🪵</span><span class="b-cat-name">바닥 공사</span><span class="b-cat-hint">강마루·장판·에폭시·폴리싱</span></div>
+      <div class="b-cat" onclick="selCat(this,'기타 시공','🏗️')"><span class="b-cat-icon">🏗️</span><span class="b-cat-name">기타 시공</span><span class="b-cat-hint">철거·설비·중문·타일·수전</span></div>
+    </div>
+    <div class="step-nav"><button class="btn-next" id="bn1" disabled onclick="goSp(2)">다음 단계 →</button></div>
+  </div>
+  <div class="sp" id="sp2">
+    <div class="sp-ttl" id="sp2-ttl">세부 서비스 선택</div>
+    <div class="sp-sub" id="sp2-sub">항목 선택 시 예상 비용이 표시됩니다 (복수 선택 가능)</div>
+
+    <!-- 일반 카테고리용 -->
+    <div id="sp2-normal">
+      <div class="sub-list" id="sub-list"></div>
+      <div class="total-bar">
+        <div class="tb-l"><div class="tb-items" id="tb-items">항목을 선택해 주세요</div><div class="tb-note">VAT 별도 / 현장에 따라 변동 가능</div></div>
+        <div class="tb-r"><div class="tb-lbl">예상 합계</div><div class="tb-num mt" id="tb-num">—</div><div class="tb-vat" id="tb-vat"></div></div>
+      </div>
+    </div>
+
+    <!-- 도배·필름 / 바닥 공사 전용 -->
+    <div id="sp2-twostep" style="display:none">
+      <div class="fg" id="ts-main-wrap">
+        <label class="fl" id="ts-main-label">종류 선택</label>
+        <div class="sub-chips" id="ts-main-chips"></div>
+      </div>
+      <div class="fg" id="ts-sub-wrap" style="display:none">
+        <label class="fl" id="ts-sub-label">세부 항목 선택</label>
+        <div class="sub-chips" id="ts-sub-chips"></div>
+      </div>
+      <div class="fg" id="ts-etc-wrap" style="display:none">
+        <label class="fl">기타 바닥 시공 (직접입력)</label>
+        <input class="sub-input" id="ts-etc-input" placeholder="기타 시공 내용을 입력해 주세요">
+      </div>
+    </div>
+
+    <!-- 욕실 공사 전용 -->
+    <div id="sp2-bath" style="display:none">
+      <div class="fg" style="margin-bottom:28px">
+        <label class="fl">세부 항목 (복수 선택 가능)</label>
+        <div class="sub-chips" id="bath-chips"></div>
+      </div>
+      <div id="bath-options"></div>
+    </div>
+
+    <!-- 기타 시공 전용 (금액 없이 칩 선택) -->
+    <div id="sp2-etc" style="display:none">
+      <div class="fg">
+        <label class="fl">세부 항목 (복수 선택 가능)</label>
+        <div class="sub-chips" id="etc-chips"></div>
+        <input class="sub-input" id="etc-custom" placeholder="기타 시공 내용을 입력해 주세요" style="display:none;margin-top:8px">
+      </div>
+    </div>
+
+    <!-- 가구 공사 전용 -->
+    <div id="sp2-furn" style="display:none">
+      <div class="fg">
+        <label class="fl">세부 항목 (복수 선택 가능)</label>
+        <div class="sub-chips" id="furn-chips"></div>
+        <input class="sub-input" id="furn-custom" placeholder="기타 가구 제작 내용을 입력해 주세요" style="display:none;margin-top:8px">
+      </div>
+    </div>
+
+    <!-- 주거/상업 인테리어 전용 -->
+    <div id="sp2-resi" style="display:none">
+      <div class="fg" id="resi-biz-wrap" style="display:none">
+        <label class="fl">업종</label>
+        <div class="sub-chips" id="resi-biz-chips"></div>
+        <input class="sub-input" id="resi-biz-custom" placeholder="업종을 직접 입력해 주세요" style="display:none;margin-top:8px">
+      </div>
+      <div class="fg" id="resi-type-wrap" style="display:none">
+        <label class="fl">종류</label>
+        <div class="sub-chips" id="resi-type-chips"></div>
+      </div>
+      <div class="fg">
+        <label class="fl">시공 범위</label>
+        <div class="sub-chips">
+          <button class="sub-chip" id="resi-scope-total" onclick="selScope('total')">전체 시공 (토탈)</button>
+          <button class="sub-chip" id="resi-scope-part" onclick="selScope('part')">부분 시공</button>
+        </div>
+      </div>
+      <div class="fg">
+        <label class="fl">평형대</label>
+        <div class="sub-chips" id="resi-pyeong-chips"></div>
+        <input class="sub-input" id="resi-pyeong-custom" placeholder="평형대를 직접 입력해 주세요 (예: 20~25평)" style="display:none;margin-top:8px">
+      </div>
+    </div>
+
+    <div class="fg" style="margin-top:8px">
+      <label class="fl">추가 정보 입력 (선택)</label>
+      <textarea class="fi" id="f-sp2-memo" rows="3" style="resize:vertical" placeholder="치수, 색상, 원하는 마감 등 시공자에게 전달할 내용을 자유롭게 입력해 주세요"></textarea>
+      <div style="margin-top:8px">
+        <input type="file" id="f-sp2-files" accept="image/*,.pdf" multiple style="display:none" onchange="onFilesSelected(this)">
+        <button type="button" class="btn-back" style="width:auto;padding:9px 16px;font-size:12px;display:flex;align-items:center;gap:6px" onclick="document.getElementById('f-sp2-files').click()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+          사진 · 파일 첨부
+        </button>
+        <span style="font-size:11px;color:var(--g3);margin-left:8px">현장 사진을 첨부하시면 더 정확한 견적이 가능합니다</span>
+        <div id="f-sp2-file-list" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px"></div>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn-back" onclick="backFromSp2()">← 이전</button>
+      <button class="btn-next" id="bn2" disabled onclick="goSp(3)">다음 단계 →</button>
+    </div>
+  </div>
+  <div class="sp" id="sp3">
+    <div class="sp-ttl">희망 일정 및 연락처</div>
+    <div class="sp-sub">시공 또는 방문 견적 가능한 날짜를 선택해 주세요</div>
+    <div class="cal-box">
+      <div class="cal-hdr">
+        <button class="cal-nav-btn" onclick="chMon(-1)">‹</button>
+        <span class="cal-mo" id="cal-lbl"></span>
+        <button class="cal-nav-btn" onclick="chMon(1)">›</button>
+      </div>
+      <div class="cal-g">
+        <div class="cal-dn" style="color:var(--red)">일</div>
+        <div class="cal-dn">월</div><div class="cal-dn">화</div><div class="cal-dn">수</div>
+        <div class="cal-dn">목</div><div class="cal-dn">금</div>
+        <div class="cal-dn" style="color:var(--blue)">토</div>
+      </div>
+      <div class="cal-g" id="cal-days" style="margin-top:4px"></div>
+    </div>
+    <div class="frow">
+      <div class="fg"><label class="fl">이름</label><input class="fi" id="f-name" placeholder="홍길동"></div>
+      <div class="fg"><label class="fl">연락처 *</label><input class="fi" id="f-phone" placeholder="010-0000-0000" oninput="chk3()"></div>
+    </div>
+    <div class="fg">
+      <label class="fl">시공 주소 *</label>
+      <div style="display:flex;gap:8px">
+        <input class="fi" id="f-addr" placeholder="서울시 성동구 ○○로 00 ○○아파트 000호" oninput="chk3()">
+        <button type="button" class="btn-back" style="white-space:nowrap;width:auto;padding:0 18px;display:flex;align-items:center;gap:6px" onclick="openAddrSearch()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> 주소 찾기</button>
+      </div>
+      <input class="fi" id="f-addr-detail" placeholder="상세 주소 (동·호수 등)를 입력해 주세요" style="margin-top:8px" oninput="chk3()">
+      <p style="font-size:11px;color:var(--g3);margin-top:8px;line-height:1.7">📍 정확한 주소지는 빠른 일정 확정에 도움이 됩니다.</p>
+    </div>
+    <div class="fg" style="margin-top:8px;padding:14px;background:#FAFAFA;border:1.5px solid var(--g4);border-radius:6px">
+      <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:13px;color:var(--g2);line-height:1.6;font-weight:600;margin-bottom:8px">
+        <input type="checkbox" id="f-agree" onchange="chk3()" style="width:18px;height:18px;min-width:18px;flex-shrink:0;cursor:pointer;accent-color:var(--y);margin-top:1px">
+        <span>(필수) 개인정보 수집 및 이용에 동의합니다. <a href="javascript:void(0)" onclick="openPrivacyModal(event)" style="color:var(--g3);text-decoration:underline;font-weight:500;font-size:12px">자세히 보기</a></span>
+      </label>
+      <p style="font-size:12px;color:var(--g3);line-height:1.6;margin:0 0 12px 28px;font-weight:400">수집 항목: 이름, 연락처, 시공 주소<br>수집 목적: 시공 견적 상담 및 일정 조율<br>보유 기간: 시공 완료 후 1년<br>동의를 거부할 권리가 있으며, 동의 거부 시 견적 접수가 제한될 수 있습니다.</p>
+      <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:13px;color:var(--g2);line-height:1.6;font-weight:600">
+        <input type="checkbox" id="f-agree-3rd" onchange="chk3()" style="width:18px;height:18px;min-width:18px;flex-shrink:0;cursor:pointer;accent-color:var(--y);margin-top:1px">
+        <span>(필수) 개인정보 제3자 제공에 동의합니다.</span>
+      </label>
+      <p style="font-size:12px;color:var(--g3);line-height:1.6;margin:8px 0 0 28px;font-weight:400">제공받는 자: 매칭된 시공 파트너(작업자)<br>제공 항목: 이름, 연락처, 시공 주소, 의뢰 내용<br>제공 목적: 시공 견적 상담 및 일정 조율을 위한 연락<br>보유 기간: 시공 완료 후 1년<br>동의를 거부할 권리가 있으며, 동의 거부 시 시공 파트너 매칭이 제한될 수 있습니다.</p>
+    </div>
+    <div class="step-nav">
+      <button class="btn-back" onclick="backFromSp3()">← 이전</button>
+      <button class="btn-next" id="bn3" disabled onclick="goSp(4)">최종 확인 →</button>
+    </div>
+  </div>
+  <div class="sp" id="sp4">
+    <div class="sp-ttl">접수 내용 확인</div>
+    <div class="sp-sub">내용이 맞으면 시공을 의뢰해 주세요</div>
+    <div class="sum-card" id="summary"></div>
+    <div class="step-nav">
+      <button class="btn-back" onclick="goSp(3)">← 수정</button>
+      <button class="btn-next" onclick="submitBk()">시공 의뢰하기</button>
+    </div>
+  </div>
+  <div class="sp" id="sp-ok">
+    <div class="ok-box">
+      <div class="ok-icon" style="font-size:28px;font-family:DM Sans,sans-serif;font-weight:700">✓</div>
+      <div class="sp-ttl" style="text-align:center;margin-bottom:8px">의뢰가 접수되었습니다!</div>
+      <div class="sp-sub" style="text-align:center">담당 시공자가 24시간 이내에 연락드립니다</div>
+      <div class="ok-code" id="ok-code">DGD-00000</div><br>
+      <button class="btn-next" style="max-width:260px;margin:8px auto;display:block" onclick="resetBk()">+ 새 의뢰 접수하기</button>
+      <button class="btn-back" style="width:100%;max-width:260px;margin:0 auto;display:block;text-align:center" onclick="goPage('home')">← 홈으로</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ WORKER ═══ -->
+<div class="page" id="page-worker">
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-logo"><span>다</span><span style="color:var(--blk)">공</span><span>다</span></div>
+    <div class="auth-asub" id="auth-asub">로그인 / 회원가입</div>
+    <div class="auth-tabs">
+      <button class="at active" onclick="setATab('login',this)">로그인</button>
+      <button class="at" onclick="setATab('signup',this)">신규 가입</button>
+    </div>
+    <div id="auth-login">
+      <div class="fg">
+        <label class="fl">회원 유형</label>
+        <div class="sub-chips">
+          <button class="sub-chip sel" id="login-type-member" onclick="setLoginType('member')">일반 회원</button>
+          <button class="sub-chip" id="login-type-worker" onclick="setLoginType('worker')">시공 파트너</button>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">아이디 (이메일)</label><input class="fi" id="l-id" placeholder="example@email.com"></div>
+      <div class="fg"><label class="fl">비밀번호</label><input class="fi" id="l-pw" type="password" placeholder="••••••••"></div>
+      <button class="btn-next" style="width:100%" onclick="doLogin()">로그인</button>
+      <div class="err-msg" id="l-err"></div>
+    </div>
+    <div id="auth-signup" style="display:none">
+      <div class="fg">
+        <label class="fl">회원 유형 선택 *</label>
+        <div class="sub-chips">
+          <button class="sub-chip sel" id="signup-type-member" onclick="setSignupType('member')">일반 회원</button>
+          <button class="sub-chip" id="signup-type-worker" onclick="setSignupType('worker')">시공 파트너 (작업자)</button>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">이름</label><input class="fi" id="s-name" placeholder="홍길동"></div>
+      <div class="fg"><label class="fl">아이디 (이메일)</label><input class="fi" id="s-id" placeholder="example@email.com"></div>
+      <div class="frow">
+        <div class="fg"><label class="fl">비밀번호 (8자 이상)</label><input class="fi" id="s-pw" type="password" placeholder="••••••••"></div>
+        <div class="fg"><label class="fl">비밀번호 확인</label><input class="fi" id="s-pw2" type="password" placeholder="••••••••"></div>
+      </div>
+      <div class="fg"><label class="fl">연락처</label><input class="fi" id="s-phone" placeholder="010-0000-0000"></div>
+      <div class="fg">
+        <label class="fl">주소</label>
+        <div style="display:flex;gap:8px">
+          <input class="fi" id="s-addr" placeholder="서울시 성동구 ○○로 00">
+          <button type="button" class="btn-back" style="white-space:nowrap;width:auto;padding:0 18px;display:flex;align-items:center;gap:6px" onclick="openAddrSearch('s-addr')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> 주소 찾기</button>
+        </div>
+        <input class="fi" id="s-addr-detail" placeholder="상세 주소 (동·호수 등)를 입력해 주세요" style="margin-top:8px">
+      </div>
+      <div class="fg" id="s-spec-wrap" style="display:none">
+        <label class="fl">담당 공종 * <span style="font-weight:400;color:var(--g3)">(복수 선택 가능)</span></label>
+        <div class="spec-grid" id="spec-grid"></div>
+      </div>
+      <div class="fg" id="s-radius-wrap" style="display:none">
+        <label class="fl">시공 가능 반경 * <span style="font-weight:400;color:var(--g3)">(주소지 기준)</span></label>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <button type="button" class="sub-chip radius-chip" onclick="selRadius(this,'5km')">5km 이내</button>
+          <button type="button" class="sub-chip radius-chip" onclick="selRadius(this,'10km')">10km 이내</button>
+          <button type="button" class="sub-chip radius-chip" onclick="selRadius(this,'20km')">20km 이내</button>
+          <button type="button" class="sub-chip radius-chip" onclick="selRadius(this,'30km')">30km 이내</button>
+          <button type="button" class="sub-chip radius-chip" onclick="selRadius(this,'제한없음')">제한 없음</button>
+        </div>
+        <input type="hidden" id="s-radius" value="">
+        <p style="font-size:11px;color:var(--g3);margin-top:6px">📍 입력하신 주소지를 기준으로 반경 내 고객 의뢰가 배정됩니다.</p>
+      </div>
+      <div class="fg" style="margin-top:4px;padding:14px;background:#FAFAFA;border:1.5px solid var(--g4);border-radius:6px">
+        <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:13px;color:var(--g2);line-height:1.6;font-weight:600">
+          <input type="checkbox" id="s-agree-all" onchange="toggleAgreeAll()" style="width:18px;height:18px;min-width:18px;flex-shrink:0;cursor:pointer;accent-color:var(--y);margin-top:1px">
+          <span>전체 동의</span>
+        </label>
+        <div style="height:1px;background:var(--g5);margin:10px 0"></div>
+        <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:12px;color:var(--g2);line-height:1.6;margin-bottom:8px">
+          <input type="checkbox" class="s-agree-item" id="s-agree-terms" onchange="syncAgreeAll()" style="width:16px;height:16px;min-width:16px;flex-shrink:0;cursor:pointer;accent-color:var(--y);margin-top:1px">
+          <span>(필수) 이용약관에 동의합니다. <span style="color:var(--g3);font-weight:400">서비스 이용 및 가입에 관한 기본 약관입니다.</span></span>
+        </label>
+        <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:12px;color:var(--g2);line-height:1.6;margin-bottom:8px">
+          <input type="checkbox" class="s-agree-item" id="s-agree-privacy" onchange="syncAgreeAll()" style="width:16px;height:16px;min-width:16px;flex-shrink:0;cursor:pointer;accent-color:var(--y);margin-top:1px">
+          <span>(필수) 개인정보 수집 및 이용에 동의합니다. <a href="javascript:void(0)" onclick="openPrivacyModal(event)" style="color:var(--g3);text-decoration:underline;font-weight:500">자세히 보기</a></span>
+        </label>
+        <p style="font-size:11px;color:var(--g3);line-height:1.6;margin:0 0 8px 26px;font-weight:400">수집 항목: 이름, 아이디, 연락처, 주소(시공 파트너는 담당 공종 포함)<br>수집 목적: 회원 가입, 본인 확인, 시공 견적·일정 조율<br>보유 기간: 회원 탈퇴 후 1년<br>동의를 거부할 권리가 있으며, 동의 거부 시 회원가입이 제한될 수 있습니다.</p>
+        <div id="s-agree-3rd-wrap" style="display:none">
+          <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:12px;color:var(--g2);line-height:1.6;margin-bottom:8px">
+            <input type="checkbox" class="s-agree-item" id="s-agree-3rd" onchange="syncAgreeAll()" style="width:16px;height:16px;min-width:16px;flex-shrink:0;cursor:pointer;accent-color:var(--y);margin-top:1px">
+            <span>(필수) 개인정보 제3자 제공에 동의합니다.</span>
+          </label>
+          <p style="font-size:11px;color:var(--g3);line-height:1.6;margin:0 0 8px 26px;font-weight:400">제공받는 자: 시공을 의뢰한 고객<br>제공 항목: 이름, 연락처<br>제공 목적: 시공 일정 조율을 위한 연락<br>보유 기간: 시공 완료 후 1년<br>동의를 거부할 권리가 있으며, 동의 거부 시 시공 파트너 가입이 제한될 수 있습니다.</p>
+        </div>
+        <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:12px;color:var(--g2);line-height:1.6">
+          <input type="checkbox" class="s-agree-item" id="s-agree-marketing" onchange="syncAgreeAll()" style="width:16px;height:16px;min-width:16px;flex-shrink:0;cursor:pointer;accent-color:var(--y);margin-top:1px">
+          <span>(선택) 마케팅 정보 수신에 동의합니다. <span style="color:var(--g3);font-weight:400">이벤트·할인 등 안내를 받아보실 수 있습니다.</span></span>
+        </label>
+      </div>
+      <button class="btn-next" style="width:100%" onclick="doSignup()">가입하기</button>
+      <div class="err-msg" id="s-err"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ 일반 회원 마이페이지 ═══ -->
+<div class="page" id="page-mypage">
+<div class="auth-wrap">
+  <div class="auth-card" style="max-width:520px">
+    <div class="auth-logo"><span>다</span><span style="color:var(--blk)">공</span><span>다</span></div>
+    <div class="auth-asub" id="my-greeting">마이페이지</div>
+    <div class="fg" style="margin-top:20px">
+      <label class="fl">내 정보</label>
+      <div class="sum-card" id="my-info-card" style="margin-top:8px"></div>
+    </div>
+    <div class="fg">
+      <label class="fl">내 시공 의뢰 내역</label>
+      <div id="my-bookings-list" style="margin-top:8px;display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+    <button class="btn-next" style="width:100%;margin-top:12px" onclick="fromHome=false;goPage('booking')">+ 새 시공 의뢰하기</button>
+    <button class="btn-back" style="width:100%;margin-top:8px" onclick="logout()">로그아웃</button>
+  </div>
+</div>
+</div>
+
+<!-- ═══ DASH ═══ -->
+<div class="page" id="page-dash">
+<div class="dash-wrap">
+  <div class="dash-hdr">
+    <div><div class="dash-ttl">🔨 시공 스케줄 대시보드</div><div class="dash-stl" id="dash-stl">담당 공종의 접수 현황을 확인하세요</div></div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <div class="w-badge" id="w-badge">로딩중...</div>
+      <button class="btn-logout" onclick="logout()">로그아웃</button>
+    </div>
+  </div>
+  <div class="spec-banner" id="spec-banner"></div>
+  <div class="stats-row" id="stats-row"></div>
+  <div class="filter-row">
+    <button class="fbtn active" onclick="setFilter('all',this)">전체</button>
+    <button class="fbtn" onclick="setFilter('new',this)">신규 접수</button>
+    <button class="fbtn" onclick="setFilter('contacted',this)">컨택 완료</button>
+    <button class="fbtn" onclick="setFilter('done',this)">시공 완료</button>
+  </div>
+  <div class="dash-grid">
+    <div>
+      <div class="mini-cal">
+        <div class="mc-hdr">
+          <button class="mn-btn" onclick="mChMon(-1)">‹</button>
+          <span class="mc-mo" id="mc-lbl"></span>
+          <button class="mn-btn" onclick="mChMon(1)">›</button>
+        </div>
+        <div class="mc-grid" id="mc-grid"></div>
+      </div>
+      <div class="job-list" id="job-list"></div>
+    </div>
+    <div class="det-panel">
+      <div class="det-empty" id="det-empty"><div style="font-size:36px;margin-bottom:10px">📋</div><div style="font-size:13px;color:var(--g3)">목록에서 공정을 선택하면<br>상세 내용이 표시됩니다</div></div>
+      <div id="det-content" style="display:none"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- 시공 확정 모달 -->
+<div id="confirm-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9600;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)closeConfirmModal()">
+  <div style="background:var(--wh);border-radius:12px;max-width:420px;width:100%;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.25)">
+    <div style="padding:22px 24px;border-bottom:1px solid var(--g5);display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:16px;font-weight:700">✅ 시공 일정 확정</div>
+      <button onclick="closeConfirmModal()" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--g3)">✕</button>
+    </div>
+    <div style="padding:20px 24px">
+      <div class="fg">
+        <label class="fl">확정 시공 날짜 *</label>
+        <input class="fi" type="date" id="confirm-date">
+      </div>
+      <div class="fg">
+        <label class="fl">시공 내용 / 담당자 메모</label>
+        <textarea class="fi" id="confirm-memo" rows="3" style="resize:vertical" placeholder="고객에게 전달할 시공 내용, 주의사항 등을 입력해 주세요"></textarea>
+      </div>
+      <div style="padding:12px;background:#E3F2FD;border-radius:6px;font-size:12px;color:#1565C0;line-height:1.6;margin-bottom:16px">
+        📌 확정하면 고객 마이페이지에 날짜와 시공 내용이 즉시 표시됩니다.
+      </div>
+      <button class="btn-next" style="width:100%" onclick="submitConfirm()">시공 일정 확정하기</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- 개인정보처리방침 모달 -->
+<div id="privacy-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10000;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)closePrivacyModal()">
+  <div style="background:var(--wh);border-radius:10px;max-width:560px;width:100%;max-height:80vh;display:flex;flex-direction:column">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--g5)">
+      <div style="font-size:16px;font-weight:700">개인정보처리방침</div>
+      <button onclick="closePrivacyModal()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--g3);line-height:1">✕</button>
+    </div>
+    <div style="padding:20px 24px;overflow-y:auto;font-size:13px;color:var(--g2);line-height:1.8">
+      <p style="margin-bottom:14px"><strong>다공다</strong>(이하 "회사")는 이용자의 개인정보를 중요시하며, 「개인정보보호법」 등 관련 법령을 준수합니다.</p>
+      <p style="font-weight:700;margin-bottom:6px">1. 수집하는 개인정보 항목</p>
+      <p style="margin-bottom:14px">- 회원가입 시: 이름, 아이디(이메일), 비밀번호, 연락처, 주소<br>- 시공 파트너 가입 시: 위 항목 + 담당 공종<br>- 시공 의뢰 접수 시: 이름(선택), 연락처, 시공 주소, 의뢰 내용</p>
+      <p style="font-weight:700;margin-bottom:6px">2. 개인정보의 수집 및 이용 목적</p>
+      <p style="margin-bottom:14px">- 회원 가입 의사 확인 및 본인 식별·인증<br>- 시공 견적 상담, 일정 조율 및 시공 파트너 매칭<br>- 서비스 부정 이용 방지 및 고지사항 전달</p>
+      <p style="font-weight:700;margin-bottom:6px">3. 개인정보의 제3자 제공</p>
+      <p style="margin-bottom:14px">회사는 시공 의뢰 접수 시 매칭된 시공 파트너에게 이름, 연락처, 시공 주소, 의뢰 내용을 제공하며, 이는 시공 상담 및 일정 조율 목적으로만 사용됩니다. 이용자는 제3자 제공에 동의하지 않을 권리가 있으며, 동의 거부 시 시공 파트너 매칭이 제한될 수 있습니다.</p>
+      <p style="font-weight:700;margin-bottom:6px">4. 개인정보의 보유 및 이용 기간</p>
+      <p style="margin-bottom:14px">원칙적으로 개인정보 수집 및 이용 목적이 달성된 후에는 해당 정보를 지체 없이 파기합니다. 단, 회원 정보는 탈퇴 후 1년간, 시공 의뢰 정보는 시공 완료 후 1년간 보관 후 파기합니다. 단, 관계 법령에 따라 보존할 필요가 있는 경우 해당 법령에서 정한 기간 동안 보관합니다.</p>
+      <p style="font-weight:700;margin-bottom:6px">5. 이용자의 권리</p>
+      <p style="margin-bottom:14px">이용자는 언제든지 본인의 개인정보를 조회·수정·삭제할 수 있으며, 개인정보 수집 및 이용, 제3자 제공에 대한 동의를 철회할 수 있습니다. 동의 철회 시 서비스 이용에 제한이 있을 수 있습니다.</p>
+      <p style="font-weight:700;margin-bottom:6px">6. 개인정보 보호책임자</p>
+      <p style="margin-bottom:0">문의사항은 고객센터를 통해 접수해 주시기 바랍니다.</p>
+    </div>
+    <div style="padding:16px 24px;border-top:1px solid var(--g5);text-align:right">
+      <button class="btn-next" style="width:auto;padding:10px 24px" onclick="closePrivacyModal()">확인</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══ SUB CATEGORIES ═══ */
+const SUB_CATS = {
+  '주거 인테리어': ['아파트','주택','빌라','오피스텔'],
+  '상업 인테리어': ['카페','식당','병원','필라테스','피트니스','사무실','주점','의류매장','팝업스토어','미용실','스튜디오','프랜차이즈','기타'],
+  '욕실 공사': ['욕실 전체 교체','타일 교체','변기 교체','세면대 교체','방수 공사','샤워부스 교체','수전 교체','욕실 조명','환풍기 교체','천장재 교체'],
+  '가구 공사': ['붙박이장','드레스룸 팬트리','주방가구','신발장','기타 가구 제작'],
+  '도배·필름': ['도배','필름'],
+  '바닥 공사': ['마루','장판','데코타일'],
+  '기타 시공': ['긴급 집수리','철거','설비','중문','조명','콘센트 교체','문짝교체','문손잡이 교체','타일 시공','수전류 교체','페인트','기타'],
+};
+
+/* 도배·필름 / 바닥 공사 - 2단계 세부 항목 */
+const WALLPAPER_SUB = {
+  '도배': ['합지','실크'],
+  '필름': ['일반 필름','창문시트필름'],
+};
+const FLOOR_SUB = {
+  '마루': ['강마루','강화마루'],
+  '장판': ['1.8T','2.2T','2.7T','3.2T','4.5T'],
+  '데코타일': ['카페트 타일','데코타일'],
+};
+
+/* 욕실 공사 - 항목별 옵션 (복수 선택 가능, 항목마다 옵션 1개 선택) */
+const BATHROOM_SUB = {
+  '욕실 전체 교체': ['타일 덧방','전체 철거 + 방수 포함'],
+  '변기 교체': ['투피스','원피스'],
+  '타일 교체': ['부분 교체','전체 교체','덧방','철거'],
+  '세면대 교체': ['벽배수용','바닥배수용','하부장 타입'],
+  '방수 공사': ['고뫄스 추가'],
+  '샤워부스 교체': ['브론즈','투명','기타'],
+  '수전 교체': ['세면수전','샤워수전','샤워 일체형','청소건','기타'],
+  '욕실 조명': ['2인치','3인치','6인치','기타','주광','주백','전구'],
+  '환풍기 교체': ['휴젠트','일반'],
+  '천장재 교체': ['평돔','기타'],
+};
+
+/* ═══ PRICING ═══ */
+const PRICING={
+  '주거 인테리어':[],
+  '상업 인테리어':[],
+  '욕실 공사':[],
+  '가구 공사':[],
+  '도배 바닥 공사':[
+    {name:'합지 도배(방 1개)',mat:80000,labor:70000,unit:'실',note:'기존 도배지 위 시공'},
+    {name:'실크 도배(방 1개)',mat:130000,labor:90000,unit:'실',note:'수성 풀 기준'},
+    {name:'아파트 전체 합지 도배',mat:380000,labor:320000,unit:'식',note:'25평 기준'},
+    {name:'페인트 도장(방 1개)',mat:60000,labor:80000,unit:'실',note:'2회 도장 기준'},
+    {name:'강마루 시공',mat:55000,labor:30000,unit:'㎡',note:'철거·몰딩 포함'},
+    {name:'LVT·SPC 바닥재',mat:42000,labor:28000,unit:'㎡',note:'접착식 기준'},
+    {name:'장판 교체',mat:18000,labor:12000,unit:'㎡',note:'1.8T 기준'},
+  ],
+  '부분 시공':[
+    {name:'창호·샷시 교체',mat:350000,labor:180000,unit:'짝',note:'이중유리 기준'},
+    {name:'싱크대 교체',mat:1100000,labor:350000,unit:'식',note:'2,400mm 기준'},
+    {name:'조명 교체(LED)',mat:45000,labor:25000,unit:'개',note:'다운라이트 기준'},
+    {name:'문짝 교체',mat:180000,labor:90000,unit:'짝',note:'ABS 필름 기준'},
+    {name:'필름 시공(벽면)',mat:25000,labor:18000,unit:'㎡',note:'광폭 필름 기준'},
+    {name:'필름 시공(가구)',mat:20000,labor:15000,unit:'㎡',note:'해체 후 시공'},
+    {name:'주방 타일 교체',mat:65000,labor:45000,unit:'㎡',note:'기존 타일 철거 포함'},
+  ],
+  '기타 시공':[]
+};
+
+const SPEC_CATS={'도배·바닥 전문':['도배·필름','바닥 공사'],'욕실 시공 전문':['욕실 공사'],'주거 인테리어':['주거 인테리어'],'상업 인테리어':['상업 인테리어'],'집수리·보수 전문':['기타 시공'],'가구 전문':['가구 공사'],'전기·설비 전문':['기타 시공'],'기타 공종':['기타 시공']};
+const SPECS=[{id:'도배·바닥 전문',icon:'🎨',sub:'도배·필름·마루·장판'},{id:'욕실 시공 전문',icon:'🚿',sub:'타일·방수·도기'},{id:'주거 인테리어',icon:'🏠',sub:'아파트·빌라·리모델링'},{id:'상업 인테리어',icon:'🏪',sub:'카페·식당·사무실'},{id:'집수리·보수 전문',icon:'🔨',sub:'누수·결로·소규모 수리'},{id:'가구 전문',icon:'🪑',sub:'붙박이·신발장·주방'},{id:'전기·설비 전문',icon:'💡',sub:'조명·콘센트·수전'},{id:'기타 공종',icon:'🛠️',sub:'그 외 시공 분야'}];
+
+let bCat='',bCatIcon='',bItems=[],bDate=null;
+let bFiles=[];
+let fromHome=false;
+let cy=new Date().getFullYear(),cm=new Date().getMonth();
+let wy=new Date().getFullYear(),wm=new Date().getMonth();
+let curFilter='all',curWorker=null,curMember=null,selJobId=null;
+let workers=[],bookings=[],members=[];
+const today=new Date();
+let activeCatEl=null;
+
+async function load(){
+  try{const r=await window.storage.get('reon-bk',true);if(r?.value)bookings=JSON.parse(r.value);}catch(e){bookings=[];}
+  try{const r=await window.storage.get('reon-wk',true);if(r?.value)workers=JSON.parse(r.value);}catch(e){workers=[];}
+  try{const r=await window.storage.get('reon-mb',true);if(r?.value)members=JSON.parse(r.value);}catch(e){members=[];}
+}
+async function saveBks(){try{await window.storage.set('reon-bk',JSON.stringify(bookings),true);}catch(e){}}
+async function saveWks(){try{await window.storage.set('reon-wk',JSON.stringify(workers),true);}catch(e){}}
+async function saveMembers(){try{await window.storage.set('reon-mb',JSON.stringify(members),true);}catch(e){}}
+
+const PROMO_ID = 'promo-2026-06'; // 캠페인 바뀌면 이 값만 변경하면 다시 노출됨
+async function checkPromo(){
+  try{
+    const r = await window.storage.get('reon-promo-hide', false);
+    const hideUntil = r?.value ? JSON.parse(r.value) : null;
+    if(hideUntil && hideUntil.id===PROMO_ID && hideUntil.date===todayStr()){
+      return; // 오늘은 숨김
+    }
+  }catch(e){}
+  document.getElementById('promo-modal').style.display = 'flex';
+}
+function todayStr(){
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+async function closePromo(){
+  document.getElementById('promo-modal').style.display = 'none';
+  const hideToday = document.getElementById('promo-hide-today').checked;
+  if(hideToday){
+    try{
+      await window.storage.set('reon-promo-hide', JSON.stringify({id:PROMO_ID, date:todayStr()}), false);
+    }catch(e){}
+  }
+}
+
+function goPage(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(p==='worker'){buildSpecGrid();if(curWorker){goPage('dash');return;}if(curMember){goPage('mypage');return;}}
+  if(p==='dash')renderDash();
+  if(p==='mypage')renderMypage();
+  if(p==='booking')renderCal();
+}
+
+/* ── CIRCLE CAT TOGGLE ── */
+function toggleCat(el, catName){
+  // 소분류 없이 바로 예약 페이지로 이동
+  if(catName === '주거 인테리어' || catName === '상업 인테리어'){
+    goResiBooking(catName);
+  } else {
+    goSpecialBooking(catName);
+  }
+}
+
+function renderPyeongChips(container, inputId, onSelect){
+  container.innerHTML = '';
+  const ranges = ['10평 이하','10~15평','15~20평','20~25평','25~30평','30~35평','35~40평','40평 이상'];
+  ranges.forEach(r=>{
+    const chip = document.createElement('button');
+    chip.className = 'sub-chip';
+    chip.textContent = r;
+    chip.onclick = () => {
+      container.querySelectorAll('.sub-chip').forEach(c=>c.classList.remove('sel'));
+      chip.classList.add('sel');
+      document.getElementById(inputId).style.display = 'none';
+      onSelect(r);
+    };
+    container.appendChild(chip);
+  });
+  const chip = document.createElement('button');
+  chip.className = 'sub-chip';
+  chip.textContent = '직접입력';
+  chip.onclick = () => {
+    container.querySelectorAll('.sub-chip').forEach(c=>c.classList.remove('sel'));
+    chip.classList.add('sel');
+    const inp = document.getElementById(inputId);
+    inp.style.display = 'block';
+    inp.oninput = () => onSelect(inp.value.trim());
+    onSelect(inp.value.trim());
+  };
+  container.appendChild(chip);
+}
+
+/* ── 주거/상업 인테리어 예약 흐름 ── */
+let resiState = {biz:'', type:'', scope:'', pyeong:''};
+let bathSel = {};
+
+function goResiBooking(catName){
+  bCat=catName; bCatIcon=(catName==='주거 인테리어'?'🏠':'🏪'); bItems=[];
+  fromHome=true;
+  resiState = {biz:'', type:'', scope:'', pyeong:''};
+  goPage('booking');
+  setTimeout(()=>{
+    document.querySelectorAll('.b-cat').forEach(b=>{
+      if(b.querySelector('.b-cat-name').textContent===catName){b.classList.add('sel');}
+    });
+    document.getElementById('bn1').disabled=false;
+    buildResiUI(catName);
+    goSp(2);
+  },80);
+}
+
+/* 홈에서 종류/업종을 먼저 선택한 뒤 예약페이지로 넘어가는 경우 */
+function goResiBookingWithType(catName, typeOrBiz){
+  bCat=catName; bCatIcon=(catName==='주거 인테리어'?'🏠':'🏪'); bItems=[];
+  fromHome=true;
+  resiState = {biz:'', type:'', scope:'', pyeong:''};
+  if(catName==='상업 인테리어') resiState.biz = typeOrBiz;
+  else resiState.type = typeOrBiz;
+  goPage('booking');
+  setTimeout(()=>{
+    document.querySelectorAll('.b-cat').forEach(b=>{
+      if(b.querySelector('.b-cat-name').textContent===catName){b.classList.add('sel');}
+    });
+    document.getElementById('bn1').disabled=false;
+    buildResiUI(catName, typeOrBiz);
+    goSp(2);
+  },80);
+}
+
+function goSpecialBooking(catName, preMain){
+  const icons={'가구 공사':'🪑','도배·필름':'🎨','바닥 공사':'🪵','기타 시공':'🏗️','욕실 공사':'🚿'};
+  bCat=catName; bCatIcon=icons[catName]; bItems=[];
+  fromHome=true;
+  goPage('booking');
+  setTimeout(()=>{
+    document.querySelectorAll('.b-cat').forEach(b=>{
+      if(b.querySelector('.b-cat-name').textContent===catName){b.classList.add('sel');}
+    });
+    document.getElementById('bn1').disabled=false;
+    if(catName==='가구 공사') buildFurnUI();
+    else if(catName==='기타 시공') buildEtcUI();
+    else if(catName==='욕실 공사') buildBathUI();
+    else buildTwoStepUI(catName, preMain);
+    goSp(2);
+  },80);
+}
+
+function resetMemoAndFiles(){
+  const memoEl=document.getElementById('f-sp2-memo'); if(memoEl) memoEl.value='';
+  bFiles=[];
+  const fl=document.getElementById('f-sp2-file-list'); if(fl) fl.innerHTML='';
+}
+
+function hideAllSp2Panels(){
+  ['sp2-normal','sp2-resi','sp2-furn','sp2-twostep','sp2-bath','sp2-etc'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.style.display = 'none';
+  });
+}
+
+function buildResiUI(catName, preSelected){
+  resetMemoAndFiles();
+  document.getElementById('sp2-ttl').textContent = catName + ' — 세부 정보 입력';
+  document.getElementById('sp2-sub').textContent = '아래 항목을 선택해 주세요';
+  hideAllSp2Panels();
+  document.getElementById('sp2-resi').style.display = 'block';
+
+  const bizWrap = document.getElementById('resi-biz-wrap');
+  const typeWrap = document.getElementById('resi-type-wrap');
+
+  if(catName === '상업 인테리어'){
+    bizWrap.style.display = 'block';
+    typeWrap.style.display = 'none';
+    const bizChips = document.getElementById('resi-biz-chips');
+    bizChips.innerHTML = '';
+    const subs = SUB_CATS[catName] || [];
+    subs.forEach(s => {
+      const chip = document.createElement('button');
+      chip.className = 'sub-chip';
+      chip.textContent = s === '기타' ? '기타 (직접입력)' : s;
+      if(preSelected && s===preSelected) chip.classList.add('sel');
+      chip.onclick = () => {
+        bizChips.querySelectorAll('.sub-chip').forEach(c=>c.classList.remove('sel'));
+        chip.classList.add('sel');
+        const custom = document.getElementById('resi-biz-custom');
+        if(s === '기타'){
+          custom.style.display = 'block';
+          custom.oninput = () => { resiState.biz = custom.value.trim(); checkResi(); };
+          resiState.biz = '';
+        } else {
+          custom.style.display = 'none';
+          resiState.biz = s;
+        }
+        checkResi();
+      };
+      bizChips.appendChild(chip);
+    });
+  } else {
+    bizWrap.style.display = 'none';
+    typeWrap.style.display = 'block';
+    const typeChips = document.getElementById('resi-type-chips');
+    typeChips.innerHTML = '';
+    const subs = SUB_CATS[catName] || [];
+    subs.forEach(s => {
+      const chip = document.createElement('button');
+      chip.className = 'sub-chip';
+      chip.textContent = s;
+      if(preSelected && s===preSelected) chip.classList.add('sel');
+      chip.onclick = () => {
+        typeChips.querySelectorAll('.sub-chip').forEach(c=>c.classList.remove('sel'));
+        chip.classList.add('sel');
+        resiState.type = s;
+        checkResi();
+      };
+      typeChips.appendChild(chip);
+    });
+  }
+
+  document.getElementById('resi-scope-total').classList.remove('sel');
+  document.getElementById('resi-scope-part').classList.remove('sel');
+  renderPyeongChips(document.getElementById('resi-pyeong-chips'), 'resi-pyeong-custom', (v)=>{
+    resiState.pyeong = v; checkResi();
+  });
+}
+
+function selScope(scope){
+  resiState.scope = scope;
+  document.getElementById('resi-scope-total').classList.toggle('sel', scope==='total');
+  document.getElementById('resi-scope-part').classList.toggle('sel', scope==='part');
+  checkResi();
+}
+
+function checkResi(){
+  const ok = (bCat==='상업 인테리어' ? resiState.biz : resiState.type) && resiState.scope && resiState.pyeong;
+  document.getElementById('bn2').disabled = !ok;
+  if(ok){
+    const scopeLabel = resiState.scope==='total' ? '전체 시공' : '부분 시공';
+    const label = bCat==='상업 인테리어'
+      ? `${resiState.biz} · ${scopeLabel} · ${resiState.pyeong}`
+      : `${resiState.type} · ${scopeLabel} · ${resiState.pyeong}`;
+    bItems = [{name:label, mat:0, labor:0, total:0}];
+  }
+}
+
+function goBookingWithSub(cat, sub){
+  bCat=cat; bCatIcon='🚿'; bItems=[];
+  fromHome=true;
+  goPage('booking');
+  setTimeout(()=>{
+    document.querySelectorAll('.b-cat').forEach(b=>{
+      if(b.querySelector('.b-cat-name').textContent===cat){b.classList.add('sel');}
+    });
+    document.getElementById('bn1').disabled=false;
+    hideAllSp2Panels();
+    document.getElementById('sp2-normal').style.display='block';
+    buildSubList(cat);
+    goSp(2);
+  },80);
+}
+
+function goBookingFromSub(){
+  const cat = activeCatEl ? activeCatEl.querySelector('.cat-circle-name').textContent.replace('\n',' ').trim() : '';
+  const input = document.getElementById('sub-other-input').value.trim();
+  if(!input){showToast('내용을 입력해 주세요');return;}
+  const catKey = Object.keys(SUB_CATS).find(k=>k.includes(cat.split('\n')[0])) || cat;
+  goBookingWithSub(catKey, input);
+}
+
+function startBooking(cat,icon){
+  bCat=cat; bCatIcon=icon; bItems=[];
+  fromHome=false;
+  goPage('booking');
+  setTimeout(()=>{
+    document.querySelectorAll('.b-cat').forEach(b=>{
+      if(b.querySelector('.b-cat-name').textContent===cat) b.classList.add('sel');
+    });
+    document.getElementById('bn1').disabled=false;
+    if(cat==='주거 인테리어' || cat==='상업 인테리어'){
+      buildResiUI(cat);
+    } else if(cat==='가구 공사'){
+      buildFurnUI();
+    } else if(cat==='도배·필름' || cat==='바닥 공사'){
+      buildTwoStepUI(cat);
+    } else if(cat==='욕실 공사'){
+      buildBathUI();
+    } else if(cat==='기타 시공'){
+      buildEtcUI();
+    } else {
+      hideAllSp2Panels();
+      document.getElementById('sp2-normal').style.display='block';
+      buildSubList(cat);
+    }
+    goSp(2);
+  },80);
+}
+
+function selCat(el,name,icon){
+  document.querySelectorAll('.b-cat').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel'); bCat=name; bCatIcon=icon; bItems=[];
+  document.getElementById('bn1').disabled=false;
+  const memoEl=document.getElementById('f-sp2-memo'); if(memoEl) memoEl.value='';
+  if(name==='주거 인테리어' || name==='상업 인테리어'){
+    buildResiUI(name);
+  } else if(name==='가구 공사'){
+    buildFurnUI();
+  } else if(name==='도배·필름' || name==='바닥 공사'){
+    buildTwoStepUI(name);
+  } else if(name==='욕실 공사'){
+    buildBathUI();
+  } else if(name==='기타 시공'){
+    buildEtcUI();
+  } else {
+    hideAllSp2Panels();
+    document.getElementById('sp2-normal').style.display='block';
+    document.getElementById('sp2-ttl').textContent=name+' — 세부 항목 선택';
+    document.getElementById('sp2-sub').textContent='항목 선택 시 예상 비용이 표시됩니다 (복수 선택 가능)';
+    buildSubList(name);
+  }
+}
+
+function buildTwoStepUI(catName, preMain){
+  resetMemoAndFiles();
+  const dataMap = catName==='도배·필름' ? WALLPAPER_SUB : FLOOR_SUB;
+  document.getElementById('sp2-ttl').textContent = catName + ' — 종류 선택';
+  document.getElementById('sp2-sub').textContent = '아래 항목을 선택해 주세요';
+  hideAllSp2Panels();
+  document.getElementById('sp2-twostep').style.display = 'block';
+
+  document.getElementById('ts-main-label').textContent = catName==='도배·필름' ? '도배 / 필름 선택' : '바닥재 종류 선택';
+  document.getElementById('ts-sub-wrap').style.display = 'none';
+  document.getElementById('ts-etc-wrap').style.display = catName==='바닥 공사' ? 'block' : 'none';
+  bItems = [];
+  document.getElementById('bn2').disabled = true;
+
+  const mainChips = document.getElementById('ts-main-chips');
+  mainChips.innerHTML = '';
+  let preChipEl = null;
+  Object.keys(dataMap).forEach(main=>{
+    const chip = document.createElement('button');
+    chip.className = 'sub-chip';
+    chip.textContent = main;
+    chip.onclick = () => {
+      mainChips.querySelectorAll('.sub-chip').forEach(c=>c.classList.remove('sel'));
+      chip.classList.add('sel');
+      const subWrap = document.getElementById('ts-sub-wrap');
+      const subChips = document.getElementById('ts-sub-chips');
+      document.getElementById('ts-sub-label').textContent = main + ' — 세부 항목 선택';
+      subChips.innerHTML = '';
+      dataMap[main].forEach(sub=>{
+        const sc = document.createElement('button');
+        sc.className = 'sub-chip';
+        sc.textContent = sub;
+        sc.onclick = () => {
+          subChips.querySelectorAll('.sub-chip').forEach(c=>c.classList.remove('sel'));
+          sc.classList.add('sel');
+          syncTwoStepItems(catName, main, sub);
+        };
+        subChips.appendChild(sc);
+      });
+      subWrap.style.display = 'block';
+    };
+    mainChips.appendChild(chip);
+    if(preMain && main===preMain) preChipEl = chip;
+  });
+
+  const etcInput = document.getElementById('ts-etc-input');
+  if(etcInput) etcInput.oninput = () => syncTwoStepItems(catName, null, null, true);
+
+  if(preChipEl) preChipEl.click();
+}
+
+function syncTwoStepItems(catName, main, sub, etcOnly){
+  const etcVal = document.getElementById('ts-etc-input') ? document.getElementById('ts-etc-input').value.trim() : '';
+  const items = [];
+  if(main && sub) items.push({name: main + ' - ' + sub, mat:0, labor:0, total:0});
+  if(etcVal) items.push({name: '기타 바닥 시공 (' + etcVal + ')', mat:0, labor:0, total:0});
+  bItems = items;
+  document.getElementById('bn2').disabled = bItems.length===0;
+}
+
+function buildBathUI(){
+  resetMemoAndFiles();
+  document.getElementById('sp2-ttl').textContent = '욕실 공사 — 세부 항목 선택';
+  document.getElementById('sp2-sub').textContent = '필요한 항목을 선택하고, 각 항목의 옵션을 골라주세요';
+  hideAllSp2Panels();
+  document.getElementById('sp2-bath').style.display = 'block';
+
+  bItems = [];
+  document.getElementById('bn2').disabled = true;
+  bathSel = {};
+
+  const chips = document.getElementById('bath-chips');
+  const optWrap = document.getElementById('bath-options');
+  chips.innerHTML = '';
+  optWrap.innerHTML = '';
+
+  Object.keys(BATHROOM_SUB).forEach(item=>{
+    const chip = document.createElement('button');
+    chip.className = 'sub-chip';
+    chip.textContent = item;
+    chip.onclick = () => {
+      chip.classList.toggle('sel');
+      if(chip.classList.contains('sel')){
+        renderBathOptionBlock(item);
+      } else {
+        delete bathSel[item];
+        const block = document.getElementById('bath-opt-'+bathSafeId(item));
+        if(block) block.remove();
+        syncBathItems();
+      }
+    };
+    chips.appendChild(chip);
+  });
+}
+
+function bathSafeId(s){ return s.replace(/[^a-zA-Z0-9가-힣]/g,''); }
+
+function renderBathOptionBlock(item){
+  const optWrap = document.getElementById('bath-options');
+  const block = document.createElement('div');
+  block.className = 'fg';
+  block.id = 'bath-opt-'+bathSafeId(item);
+  block.style.marginTop = '22px';
+  block.style.padding = '14px 16px';
+  block.style.background = '#FAFAFA';
+  block.style.border = '1px solid var(--g5)';
+  block.style.borderRadius = '8px';
+  block.innerHTML = `<label class="fl" style="margin-bottom:4px">${item} — 옵션 선택</label><div class="sub-chips" id="bath-opt-chips-${bathSafeId(item)}"></div>`;
+  optWrap.appendChild(block);
+  const optChips = block.querySelector('.sub-chips');
+  BATHROOM_SUB[item].forEach(opt=>{
+    const oc = document.createElement('button');
+    oc.className = 'sub-chip';
+    oc.textContent = opt;
+    oc.onclick = () => {
+      // 욕실 조명은 사이즈+색온도 등 복수 옵션 선택 가능, 나머지는 단일 선택
+      if(item === '욕실 조명'){
+        oc.classList.toggle('sel');
+      } else {
+        optChips.querySelectorAll('.sub-chip').forEach(c=>c.classList.remove('sel'));
+        oc.classList.add('sel');
+      }
+      bathSel[item] = Array.from(optChips.querySelectorAll('.sub-chip.sel')).map(c=>c.textContent);
+      syncBathItems();
+    };
+    optChips.appendChild(oc);
+  });
+}
+
+function syncBathItems(){
+  const names = Object.keys(bathSel).filter(item=>bathSel[item] && bathSel[item].length>0)
+    .map(item => item + ' (' + bathSel[item].join(', ') + ')');
+  const selectedNoOpt = Array.from(document.querySelectorAll('#bath-chips .sub-chip.sel')).map(c=>c.textContent)
+    .filter(item => !bathSel[item] || bathSel[item].length===0);
+  bItems = [...names, ...selectedNoOpt].map(n=>({name:n,mat:0,labor:0,total:0}));
+  const allChosenHaveOption = Array.from(document.querySelectorAll('#bath-chips .sub-chip.sel')).every(c=>bathSel[c.textContent] && bathSel[c.textContent].length>0);
+  document.getElementById('bn2').disabled = bItems.length===0 || !allChosenHaveOption;
+}
+
+function buildEtcUI(){
+  resetMemoAndFiles();
+  document.getElementById('sp2-ttl').textContent = '기타 시공 — 세부 항목 선택';
+  document.getElementById('sp2-sub').textContent = '필요한 항목을 모두 선택해 주세요';
+  hideAllSp2Panels();
+  document.getElementById('sp2-etc').style.display = 'block';
+  const chips = document.getElementById('etc-chips');
+  chips.innerHTML = '';
+  bItems = [];
+  const items = SUB_CATS['기타 시공'];
+  items.forEach(s=>{
+    const chip = document.createElement('button');
+    chip.className = 'sub-chip';
+    chip.textContent = s;
+    chip.onclick = () => {
+      chip.classList.toggle('sel');
+      if(s==='기타'){
+        const custom = document.getElementById('etc-custom');
+        custom.style.display = chip.classList.contains('sel') ? 'block' : 'none';
+        if(!chip.classList.contains('sel')) custom.value='';
+      }
+      syncEtcItems();
+    };
+    chips.appendChild(chip);
+  });
+  document.getElementById('etc-custom').oninput = syncEtcItems;
+}
+
+function syncEtcItems(){
+  const sel = Array.from(document.querySelectorAll('#etc-chips .sub-chip.sel')).map(c=>c.textContent);
+  const customVal = document.getElementById('etc-custom').value.trim();
+  let names = sel.filter(s=>s!=='기타');
+  if(sel.includes('기타')){
+    names.push(customVal ? `기타 (${customVal})` : '기타');
+  }
+  bItems = names.map(n=>({name:n,mat:0,labor:0,total:0}));
+  document.getElementById('bn2').disabled = bItems.length===0;
+}
+
+function buildFurnUI(){
+  resetMemoAndFiles();
+  document.getElementById('sp2-ttl').textContent = '가구 공사 — 세부 항목 선택';
+  document.getElementById('sp2-sub').textContent = '필요한 항목을 모두 선택해 주세요';
+  hideAllSp2Panels();
+  document.getElementById('sp2-furn').style.display = 'block';
+  const chips = document.getElementById('furn-chips');
+  chips.innerHTML = '';
+  bItems = [];
+  const items = SUB_CATS['가구 공사'];
+  items.forEach(s=>{
+    const chip = document.createElement('button');
+    chip.className = 'sub-chip';
+    chip.textContent = s;
+    chip.onclick = () => {
+      chip.classList.toggle('sel');
+      if(s==='기타 가구 제작'){
+        const custom = document.getElementById('furn-custom');
+        custom.style.display = chip.classList.contains('sel') ? 'block' : 'none';
+        if(!chip.classList.contains('sel')) custom.value='';
+      }
+      syncFurnItems();
+    };
+    chips.appendChild(chip);
+  });
+  document.getElementById('furn-custom').oninput = syncFurnItems;
+}
+
+function syncFurnItems(){
+  const sel = Array.from(document.querySelectorAll('#furn-chips .sub-chip.sel')).map(c=>c.textContent);
+  const customVal = document.getElementById('furn-custom').value.trim();
+  let names = sel.filter(s=>s!=='기타 가구 제작');
+  if(sel.includes('기타 가구 제작')){
+    names.push(customVal ? `기타 가구 제작 (${customVal})` : '기타 가구 제작');
+  }
+  bItems = names.map(n=>({name:n,mat:0,labor:0,total:0}));
+  document.getElementById('bn2').disabled = bItems.length===0;
+}
+
+function buildSubList(name){
+  resetMemoAndFiles();
+  document.getElementById('sp2-ttl').textContent=name+' — 세부 항목 선택';
+  const list=document.getElementById('sub-list'); list.innerHTML='';
+  const items = PRICING[name] || [];
+  items.forEach(item=>{
+    const total=item.mat+item.labor;
+    const el2=document.createElement('div'); el2.className='si';
+    el2.innerHTML=`<div class="si-hdr"><div class="si-chk"></div><div class="si-info"><div class="si-name">${item.name}</div><div class="si-chips">${item.mat>0?`<span class="chip chip-m">자재 ${fmt(item.mat)}원</span>`:''}<span class="chip chip-l">시공 ${fmt(item.labor)}원</span><span class="chip chip-t">합계 ${fmt(total)}원/${item.unit}</span></div></div><div class="si-arr">›</div></div><div class="si-bd"><div class="bd-ttl">예상 비용 상세</div>${item.mat>0?`<div class="bd-row"><span>자재비</span><span>${fmt(item.mat)}원</span></div>`:''}<div class="bd-row"><span>시공비</span><span>${fmt(item.labor)}원</span></div><div class="bd-row"><span>VAT(10%)</span><span>${fmt(Math.round(total*.1))}원</span></div><div class="bd-row"><span>총 예상</span><span>${fmt(Math.round(total*1.1))}원/${item.unit}</span></div><div class="bd-note">※ ${item.note}</div></div>`;
+    el2.onclick=()=>toggleItem(el2,item.name,total);
+    list.appendChild(el2);
+  });
+  resetTB();
+}
+
+function toggleItem(el,name,total){
+  el.classList.toggle('sel');
+  if(el.classList.contains('sel')){bItems.push({name,total});el.querySelector('.si-chk').innerHTML='✓';}
+  else{bItems=bItems.filter(i=>i.name!==name);el.querySelector('.si-chk').innerHTML='';}
+  document.getElementById('bn2').disabled=bItems.length===0;
+  updTB();
+}
+function resetTB(){
+  document.getElementById('tb-items').textContent='항목을 선택해 주세요';
+  document.getElementById('tb-items').classList.remove('has');
+  const n=document.getElementById('tb-num');n.textContent='—';n.classList.add('mt');
+  document.getElementById('tb-vat').textContent='';
+  document.getElementById('bn2').disabled=true;
+}
+function updTB(){
+  const ti=document.getElementById('tb-items'),tn=document.getElementById('tb-num'),tv=document.getElementById('tb-vat');
+  if(!bItems.length){resetTB();return;}
+  const sub=bItems.reduce((a,i)=>a+i.total,0),vat=Math.round(sub*.1);
+  ti.textContent=bItems.map(i=>i.name).join(' · ');ti.classList.add('has');
+  tn.textContent=fmt(sub+vat)+'원~';tn.classList.remove('mt');
+  tv.textContent=`소계 ${fmt(sub)}원 + VAT ${fmt(vat)}원`;
+}
+
+function goSp(n){
+  document.querySelectorAll('.sp').forEach(p=>p.classList.remove('active'));
+  document.getElementById('sp'+(n==='ok'?'-ok':n)).classList.add('active');
+  updProg(n); if(n===2)updMemoLabel(); if(n===3)renderCal(); if(n===4)renderSum();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function updMemoLabel(){
+  const ta = document.getElementById('f-sp2-memo');
+  if(!ta) return;
+  if(bCat==='가구 공사'){
+    ta.placeholder = '치수, 색상, 원하는 마감 등 자유롭게 입력해 주세요';
+  } else {
+    ta.placeholder = '치수, 색상, 원하는 마감 등 시공자에게 전달할 내용을 자유롭게 입력해 주세요';
+  }
+}
+function backFromSp2(){
+  if(fromHome){ goPage('home'); }
+  else { goSp(1); }
+}
+function backFromSp3(){
+  goSp(2);
+}
+function updProg(n){
+  for(let i=1;i<=4;i++){
+    const d=document.getElementById('pd'+i),l=document.getElementById('pl'+i);
+    d.className='pd';l.className='pl';
+    if(i<n){d.classList.add('done');d.innerHTML='✓';}
+    else if(i===n){d.classList.add('cur');d.innerHTML=i;l.classList.add('cur');}
+    else d.innerHTML=i;
+    if(i<4){const ln=document.getElementById('pln'+i);ln.className='pline'+(i<n?' done':'');}
+  }
+}
+function renderCal(){
+  document.getElementById('cal-lbl').textContent=`${cy}년 ${cm+1}월`;
+  const grid=document.getElementById('cal-days');grid.innerHTML='';
+  const first=new Date(cy,cm,1).getDay(),days=new Date(cy,cm+1,0).getDate();
+  for(let i=0;i<first;i++){const d=document.createElement('div');d.className='cal-d dis';grid.appendChild(d);}
+  for(let d=1;d<=days;d++){
+    const ds=`${cy}-${String(cm+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const past=new Date(cy,cm,d)<new Date(today.getFullYear(),today.getMonth(),today.getDate());
+    const el=document.createElement('div');el.className='cal-d'+(past?' dis':'');
+    if(ds===bDate)el.classList.add('sel');
+    if(d===today.getDate()&&cm===today.getMonth()&&cy===today.getFullYear())el.classList.add('tod');
+    el.textContent=d;
+    if(!past)el.onclick=()=>{document.querySelectorAll('.cal-d').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');bDate=ds;chk3();};
+    grid.appendChild(el);
+  }
+}
+function chMon(d){cm+=d;if(cm<0){cm=11;cy--;}if(cm>11){cm=0;cy++;}renderCal();}
+let confirmTargetId = null;
+function openConfirmModal(id){
+  confirmTargetId = id;
+  const j = bookings.find(b=>b.id===id);
+  if(!j) return;
+  // 고객이 선택한 희망 날짜를 기본값으로 채워둠
+  document.getElementById('confirm-date').value = j.date || '';
+  document.getElementById('confirm-memo').value = j.confirmMemo || '';
+  document.getElementById('confirm-modal').style.display = 'flex';
+}
+function closeConfirmModal(){
+  document.getElementById('confirm-modal').style.display = 'none';
+  confirmTargetId = null;
+}
+async function submitConfirm(){
+  const date = document.getElementById('confirm-date').value;
+  const memo = document.getElementById('confirm-memo').value.trim();
+  if(!date){ showToast('확정 날짜를 선택해 주세요'); return; }
+  const j = bookings.find(b=>b.id===confirmTargetId);
+  if(!j) return;
+  j.status = 'confirmed';
+  j.confirmedDate = date;
+  j.confirmMemo = memo;
+  j.confirmedAt = new Date().toISOString();
+  await saveBks();
+  closeConfirmModal();
+  showToast('✅ 시공 일정이 확정됐습니다! 고객에게 표시됩니다.');
+  renderDash();
+  selJob(j.id);
+}
+
+function openPrivacyModal(e){
+  if(e) e.preventDefault();
+  document.getElementById('privacy-modal').style.display='flex';
+}
+function closePrivacyModal(){
+  document.getElementById('privacy-modal').style.display='none';
+}
+function chk3(){
+  const p=document.getElementById('f-phone').value.trim();
+  const a=document.getElementById('f-addr').value.trim();
+  const agree=document.getElementById('f-agree').checked;
+  const agree3rd=document.getElementById('f-agree-3rd').checked;
+  document.getElementById('bn3').disabled=!(bDate&&p&&a&&agree&&agree3rd);
+}
+function onFilesSelected(input){
+  const files = Array.from(input.files || []);
+  const maxFiles = 6, maxSize = 8*1024*1024; // 8MB
+  files.forEach(file=>{
+    if(bFiles.length >= maxFiles){ showToast('파일은 최대 '+maxFiles+'개까지 첨부 가능합니다'); return; }
+    if(file.size > maxSize){ showToast(file.name+' 용량이 너무 큽니다 (최대 8MB)'); return; }
+    const reader = new FileReader();
+    reader.onload = (e)=>{
+      bFiles.push({name:file.name, type:file.type, dataUrl:e.target.result});
+      renderFileList();
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value = '';
+}
+function removeFile(idx){
+  bFiles.splice(idx,1);
+  renderFileList();
+}
+function renderFileList(){
+  const wrap = document.getElementById('f-sp2-file-list');
+  if(!wrap) return;
+  wrap.innerHTML = bFiles.map((f,i)=>{
+    const isImg = f.type && f.type.startsWith('image/');
+    const thumb = isImg
+      ? `<img src="${f.dataUrl}" style="width:100%;height:100%;object-fit:cover">`
+      : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:20px">📄</div>`;
+    return `<div style="position:relative;width:64px;height:64px;border-radius:6px;overflow:hidden;border:1.5px solid var(--g4)">
+      ${thumb}
+      <button onclick="removeFile(${i})" style="position:absolute;top:2px;right:2px;width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;border:none;font-size:11px;cursor:pointer;line-height:1">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function openAddrSearch(targetId){
+  targetId = targetId || 'f-addr';
+  if(typeof daum==='undefined' || !daum.Postcode){
+    showToast('주소 검색 서비스를 불러오지 못했습니다. 네트워크를 확인해 주세요.');
+    return;
+  }
+  new daum.Postcode({
+    oncomplete: function(data){
+      const addr = data.userSelectedType === 'R' ? data.roadAddress : data.jibunAddress;
+      document.getElementById(targetId).value = addr;
+      const detailId = targetId + '-detail';
+      const detailEl = document.getElementById(detailId);
+      if(detailEl) detailEl.focus();
+      if(targetId==='f-addr') chk3();
+    }
+  }).open();
+}
+function getPyeong(){
+  return resiState && resiState.pyeong ? resiState.pyeong : '';
+}
+function renderSum(){
+  const [y,m,d]=bDate.split('-');const sub=bItems.reduce((a,i)=>a+i.total,0);
+  const pyeong=getPyeong();
+  document.getElementById('summary').innerHTML=`
+    <div class="sum-row"><span class="sum-k">대분류</span><span class="sum-v">${bCatIcon} ${bCat}</span></div>
+    <div class="sum-row"><span class="sum-k">선택 항목</span><span class="sum-v">${bItems.map(i=>i.name).join(', ')}</span></div>
+    ${pyeong?`<div class="sum-row"><span class="sum-k">평형대</span><span class="sum-v">${pyeong}</span></div>`:''}
+    <div class="sum-row"><span class="sum-k">희망 일정</span><span class="sum-v">📅 ${parseInt(y)}년 ${parseInt(m)}월 ${parseInt(d)}일</span></div>
+    <div class="sum-row"><span class="sum-k">이름</span><span class="sum-v">${document.getElementById('f-name').value||'미입력'}</span></div>
+    <div class="sum-row"><span class="sum-k">연락처</span><span class="sum-v">${document.getElementById('f-phone').value}</span></div>
+    <div class="sum-row"><span class="sum-k">주소</span><span class="sum-v">${getFullAddr()}</span></div>
+    ${document.getElementById('f-sp2-memo').value?`<div class="sum-row"><span class="sum-k">추가 정보</span><span class="sum-v">${document.getElementById('f-sp2-memo').value}</span></div>`:''}
+    ${bFiles.length?`<div class="sum-row"><span class="sum-k">첨부 파일</span><span class="sum-v">${bFiles.length}개 첨부됨</span></div>`:''}
+    <div class="sum-total"><span class="sum-tl">예상 견적 합계 (VAT 포함)</span><span class="sum-tn">${fmt(Math.round(sub*1.1))}원~</span></div>`;
+}
+function getFullAddr(){
+  const a=document.getElementById('f-addr').value.trim();
+  const d=document.getElementById('f-addr-detail').value.trim();
+  return d ? (a+' '+d) : a;
+}
+async function submitBk(){
+  const code='DGD-'+Math.floor(10000+Math.random()*90000);
+  const sub=bItems.reduce((a,i)=>a+i.total,0);
+  bookings.push({id:code,cat:bCat,catIcon:bCatIcon,items:bItems.map(i=>i.name),itemsDetail:[...bItems],totalEstimate:sub,date:bDate,pyeong:getPyeong(),name:document.getElementById('f-name').value,phone:document.getElementById('f-phone').value,addr:getFullAddr(),memo:document.getElementById('f-sp2-memo').value,files:[...bFiles],status:'new',createdAt:new Date().toISOString()});
+  await saveBks();
+  document.getElementById('ok-code').textContent=code;
+  document.querySelectorAll('.sp').forEach(p=>p.classList.remove('active'));
+  document.getElementById('sp-ok').classList.add('active');
+  showToast('✓ 시공 의뢰 접수 완료!');
+}
+function resetBk(){
+  bCat='';bCatIcon='';bItems=[];bDate=null;bFiles=[];
+  resiState = {biz:'', type:'', scope:'', pyeong:''};
+  document.querySelectorAll('.b-cat').forEach(b=>b.classList.remove('sel'));
+  ['f-name','f-phone','f-addr','f-addr-detail','f-sp2-memo'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  const fl0=document.getElementById('f-sp2-file-list');if(fl0)fl0.innerHTML='';
+  const ag=document.getElementById('f-agree');if(ag)ag.checked=false;
+  const ag3=document.getElementById('f-agree-3rd');if(ag3)ag3.checked=false;
+  hideAllSp2Panels();
+  document.getElementById('sp2-normal').style.display='block';
+  document.getElementById('bn1').disabled=true;
+  document.querySelectorAll('.sp').forEach(p=>p.classList.remove('active'));
+  document.getElementById('sp1').classList.add('active');
+  updProg(1);
+}
+function buildSpecGrid(){
+  const g=document.getElementById('spec-grid');if(!g)return;g.innerHTML='';
+  SPECS.forEach(sp=>{
+    const btn=document.createElement('div');btn.className='spec-btn';
+    btn.innerHTML=`<span class="sp-icon">${sp.icon}</span><span class="sp-name">${sp.id}</span><span class="sp-sub">${sp.sub}</span>`;
+    btn.onclick=()=>btn.classList.toggle('sel');
+    g.appendChild(btn);
+  });
+}
+function setATab(t,el){
+  document.querySelectorAll('.at').forEach(b=>b.classList.remove('active'));el.classList.add('active');
+  document.getElementById('auth-login').style.display=t==='login'?'block':'none';
+  document.getElementById('auth-signup').style.display=t==='signup'?'block':'none';
+}
+
+let loginType = 'member';
+let signupType = 'member';
+
+function setLoginType(t){
+  loginType = t;
+  document.getElementById('login-type-member').classList.toggle('sel', t==='member');
+  document.getElementById('login-type-worker').classList.toggle('sel', t==='worker');
+}
+
+function setSignupType(t){
+  signupType = t;
+  document.getElementById('signup-type-member').classList.toggle('sel', t==='member');
+  document.getElementById('signup-type-worker').classList.toggle('sel', t==='worker');
+  document.getElementById('s-spec-wrap').style.display = t==='worker' ? 'block' : 'none';
+  document.getElementById('s-radius-wrap').style.display = t==='worker' ? 'block' : 'none';
+  document.getElementById('s-agree-3rd-wrap').style.display = t==='worker' ? 'block' : 'none';
+  syncAgreeAll();
+}
+
+function selRadius(el, val){
+  document.querySelectorAll('.radius-chip').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('s-radius').value = val;
+}
+
+async function doLogin(){
+  const id=document.getElementById('l-id').value.trim(),pw=document.getElementById('l-pw').value;
+  if(loginType==='worker'){
+    const w=workers.find(x=>x.id===id&&x.pw===pw);
+    if(!w){document.getElementById('l-err').textContent='아이디 또는 비밀번호가 올바르지 않습니다.';return;}
+    document.getElementById('l-err').textContent='';
+    curWorker=w;showToast('✓ 로그인 성공!');goPage('dash');
+  } else {
+    const m=members.find(x=>x.id===id&&x.pw===pw);
+    if(!m){document.getElementById('l-err').textContent='아이디 또는 비밀번호가 올바르지 않습니다.';return;}
+    document.getElementById('l-err').textContent='';
+    curMember=m;showToast('✓ 로그인 성공!');goPage('mypage');
+  }
+}
+
+function visibleAgreeItems(){
+  const all = Array.from(document.querySelectorAll('.s-agree-item'));
+  const thirdWrapHidden = document.getElementById('s-agree-3rd-wrap').style.display === 'none';
+  return all.filter(c => !(c.id === 's-agree-3rd' && thirdWrapHidden));
+}
+function toggleAgreeAll(){
+  const all = document.getElementById('s-agree-all').checked;
+  visibleAgreeItems().forEach(c=>c.checked=all);
+}
+function syncAgreeAll(){
+  const items = visibleAgreeItems();
+  const allChecked = items.length>0 && items.every(c=>c.checked);
+  document.getElementById('s-agree-all').checked = allChecked;
+}
+
+async function doSignup(){
+  const name=document.getElementById('s-name').value.trim(),id=document.getElementById('s-id').value.trim();
+  const pw=document.getElementById('s-pw').value,pw2=document.getElementById('s-pw2').value;
+  const phone=document.getElementById('s-phone').value.trim();
+  const addr=document.getElementById('s-addr').value.trim();
+  const addrDetail=document.getElementById('s-addr-detail').value.trim();
+  const fullAddr = addrDetail ? (addr+' '+addrDetail) : addr;
+
+  if(!name||!id||!pw||!pw2||!phone){document.getElementById('s-err').textContent='모든 항목을 입력해 주세요.';return;}
+  if(pw.length<8){document.getElementById('s-err').textContent='비밀번호는 8자 이상이어야 합니다.';return;}
+  if(pw!==pw2){document.getElementById('s-err').textContent='비밀번호가 일치하지 않습니다.';return;}
+  if(!document.getElementById('s-agree-terms').checked || !document.getElementById('s-agree-privacy').checked){
+    document.getElementById('s-err').textContent='필수 약관(이용약관, 개인정보 수집·이용)에 동의해 주세요.';return;
+  }
+  if(signupType==='worker' && !document.getElementById('s-agree-3rd').checked){
+    document.getElementById('s-err').textContent='필수 약관(개인정보 제3자 제공)에 동의해 주세요.';return;
+  }
+
+  if(signupType==='worker'){
+    const specs=Array.from(document.querySelectorAll('#spec-grid .spec-btn.sel')).map(b=>b.querySelector('.sp-name').textContent);
+    const radius=document.getElementById('s-radius').value;
+    if(specs.length===0){document.getElementById('s-err').textContent='담당 공종을 1개 이상 선택해 주세요.';return;}
+    if(!radius){document.getElementById('s-err').textContent='시공 가능 반경을 선택해 주세요.';return;}
+    if(workers.find(x=>x.id===id)){document.getElementById('s-err').textContent='이미 사용 중인 아이디입니다.';return;}
+    workers.push({id,pw,name,phone,addr:fullAddr,specs,radius});await saveWks();
+    curWorker={id,pw,name,phone,addr:fullAddr,specs,radius};showToast('✓ 가입 완료!');
+    document.getElementById('s-err').textContent='';
+    goPage('dash');
+  } else {
+    if(members.find(x=>x.id===id)){document.getElementById('s-err').textContent='이미 사용 중인 아이디입니다.';return;}
+    members.push({id,pw,name,phone,addr:fullAddr});await saveMembers();
+    curMember={id,pw,name,phone,addr:fullAddr};showToast('✓ 가입 완료!');
+    document.getElementById('s-err').textContent='';
+    goPage('mypage');
+  }
+}
+
+function logout(){curWorker=null;curMember=null;curFilter='all';selJobId=null;goPage('worker');}
+
+function renderMypage(){
+  if(!curMember){goPage('worker');return;}
+  document.getElementById('my-greeting').textContent = curMember.name + '님, 환영합니다';
+  document.getElementById('my-info-card').innerHTML = `
+    <div class="sum-row"><span class="sum-k">이름</span><span class="sum-v">${curMember.name}</span></div>
+    <div class="sum-row"><span class="sum-k">아이디</span><span class="sum-v">${curMember.id}</span></div>
+    <div class="sum-row"><span class="sum-k">연락처</span><span class="sum-v">${curMember.phone}</span></div>
+    <div class="sum-row"><span class="sum-k">주소</span><span class="sum-v">${curMember.addr||'미입력'}</span></div>`;
+  const myBks = bookings.filter(b=>b.phone===curMember.phone);
+  const listEl = document.getElementById('my-bookings-list');
+  if(!myBks.length){
+    listEl.innerHTML = `<div class="empty-state"><div style="font-size:32px;margin-bottom:10px">📭</div><div style="font-size:13px;line-height:1.7">아직 접수된 시공 의뢰가 없습니다</div></div>`;
+    return;
+  }
+  const sm={new:['b-new','신규 접수'],contacted:['b-cont','컨택 완료'],confirmed:['b-confirmed','✅ 시공 확정'],done:['b-done','시공 완료']};
+  listEl.innerHTML = myBks.sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)).map(j=>{
+    const [y,m,d]=j.date.split('-');
+    const [cls,txt]=sm[j.status]||['b-new','신규'];
+    const confirmedBlock = (j.status==='confirmed' || j.status==='done') && j.confirmedDate ? (()=>{
+      const [cy,cm,cd]=j.confirmedDate.split('-');
+      return `<div style="margin-top:10px;padding:12px;background:#E3F2FD;border-radius:6px;border-left:3px solid #1565C0">
+        <div style="font-size:11px;font-weight:700;color:#1565C0;margin-bottom:4px">✅ 확정된 시공 일정</div>
+        <div style="font-size:14px;font-weight:700;color:var(--blk)">📅 ${parseInt(cy)}년 ${parseInt(cm)}월 ${parseInt(cd)}일</div>
+        ${j.confirmMemo?`<div style="font-size:12px;color:var(--g2);margin-top:4px;line-height:1.6">${j.confirmMemo}</div>`:''}
+      </div>`;
+    })() : '';
+    return `<div class="jcard ${j.status}">
+      <div class="j-top"><span class="j-badge ${cls}">${txt}</span><span class="j-code">${j.id}</span></div>
+      <div class="j-title">${j.catIcon} ${j.cat} — ${(j.items||[]).slice(0,2).join(', ')}${(j.items||[]).length>2?' 외':''}</div>
+      <div class="j-meta"><span>희망 일정 📅 ${parseInt(y)}년 ${parseInt(m)}월 ${parseInt(d)}일</span></div>
+      ${confirmedBlock}
+    </div>`;
+  }).join('');
+}
+function renderDash(){
+  document.getElementById('w-badge').textContent='👤 '+curWorker.name;
+  document.getElementById('dash-stl').textContent='담당: '+curWorker.specs.join(' · ');
+  document.getElementById('spec-banner').innerHTML=`🔧 <strong>${curWorker.name}</strong>님 담당 공종 — ${curWorker.specs.join(', ')} &nbsp;|&nbsp; 📍 시공 반경: ${curWorker.radius||'미설정'}`;
+  renderStats();renderMiniCal();renderJobList();
+}
+function getMyCats(){const c=new Set();curWorker.specs.forEach(sp=>(SPEC_CATS[sp]||[]).forEach(x=>c.add(x)));return c;}
+function myBk(){return bookings.filter(b=>getMyCats().has(b.cat));}
+function renderStats(){
+  const mb=myBk();
+  document.getElementById('stats-row').innerHTML=`
+    <div class="stat-card hl"><div class="stat-num">${mb.length}</div><div class="stat-lbl">내 담당 전체</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--red)">${mb.filter(b=>b.status==='new').length}</div><div class="stat-lbl">신규 (미확인)</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--yd)">${mb.filter(b=>b.status==='contacted').length}</div><div class="stat-lbl">컨택 완료</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--green)">${mb.filter(b=>b.status==='done').length}</div><div class="stat-lbl">시공 완료</div></div>`;
+}
+function renderMiniCal(){
+  const mb=myBk();const ds=new Set(mb.map(b=>b.date));
+  document.getElementById('mc-lbl').textContent=`${wy}년 ${wm+1}월`;
+  const grid=document.getElementById('mc-grid');grid.innerHTML='';
+  ['일','월','화','수','목','금','토'].forEach(n=>{const el=document.createElement('div');el.className='mc-dn';el.textContent=n;grid.appendChild(el);});
+  const first=new Date(wy,wm,1).getDay(),days=new Date(wy,wm+1,0).getDate();
+  for(let i=0;i<first;i++){const el=document.createElement('div');el.className='mc-d emp';grid.appendChild(el);}
+  for(let d=1;d<=days;d++){
+    const dateStr=`${wy}-${String(wm+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const el=document.createElement('div');el.className='mc-d';el.textContent=d;
+    if(ds.has(dateStr))el.classList.add('hasj');
+    if(d===today.getDate()&&wm===today.getMonth()&&wy===today.getFullYear())el.classList.add('todm');
+    el.onclick=()=>{document.querySelectorAll('.mc-d').forEach(x=>x.classList.remove('seld'));el.classList.add('seld');renderJobList(dateStr);};
+    grid.appendChild(el);
+  }
+}
+function mChMon(d){wm+=d;if(wm<0){wm=11;wy--;}if(wm>11){wm=0;wy++;}renderMiniCal();}
+function renderJobList(fd=null){
+  let jobs=[...myBk()];
+  if(curFilter!=='all')jobs=jobs.filter(b=>b.status===curFilter);
+  if(fd)jobs=jobs.filter(b=>b.date===fd);
+  jobs.sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+  const wrap=document.getElementById('job-list');
+  if(!jobs.length){wrap.innerHTML=`<div class="empty-state"><div style="font-size:32px;margin-bottom:10px">📭</div><div style="font-size:13px;line-height:1.7">${fd?'해당 날짜에 접수된 건이 없습니다':'접수된 공정이 없습니다'}</div></div>`;return;}
+  const sm={new:['b-new','신규 접수'],contacted:['b-cont','컨택 완료'],done:['b-done','시공 완료']};
+  wrap.innerHTML=jobs.map(j=>{
+    const [y,m,d]=j.date.split('-');const [cls,txt]=sm[j.status]||['b-new','신규'];
+    const est=j.totalEstimate?`<div class="j-price">예상 ${fmt(Math.round(j.totalEstimate*1.1))}원~</div>`:'';
+    return `<div class="jcard ${j.status}" onclick="selJob('${j.id}')"><div class="j-top"><span class="j-badge ${cls}">${txt}</span><span class="j-code">${j.id}</span></div><div class="j-title">${j.catIcon} ${j.cat} — ${(j.items||[]).slice(0,2).join(', ')}${(j.items||[]).length>2?' 외':''}</div><div class="j-meta"><span>📅 ${parseInt(y)}년 ${parseInt(m)}월 ${parseInt(d)}일</span>${j.pyeong?`<span>📐 ${j.pyeong}</span>`:''}<span>📞 ${j.phone}</span></div>${est}</div>`;
+  }).join('');
+}
+function selJob(id){
+  selJobId=id;const j=bookings.find(b=>b.id===id);if(!j)return;
+  const [y,m,d]=j.date.split('-');
+  const sm={new:'신규 접수',contacted:'컨택 완료',confirmed:'✅ 시공 확정',done:'시공 완료'};
+  const total=j.totalEstimate||0;const vat=Math.round(total*.1);
+  const itemRows=(j.itemsDetail||[]).map(i=>`<div class="pb-row"><span>${i.name}</span><span>${fmt(i.total)}원</span></div>`).join('');
+  const filesHtml = (j.files && j.files.length) ? `<div style="display:flex;flex-wrap:wrap;gap:8px;margin:12px 0"> ${j.files.map(f=>{
+    const isImg = f.type && f.type.startsWith('image/');
+    return isImg
+      ? `<a href="${f.dataUrl}" target="_blank"><img src="${f.dataUrl}" style="width:64px;height:64px;object-fit:cover;border-radius:6px;border:1.5px solid var(--g4)"></a>`
+      : `<a href="${f.dataUrl}" download="${f.name}" style="display:flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:6px;border:1.5px solid var(--g4);font-size:20px;text-decoration:none">📄</a>`;
+  }).join('')}</div>` : '';
+  document.getElementById('det-empty').style.display='none';
+  const c=document.getElementById('det-content');c.style.display='block';
+  const confirmedDateHtml = j.confirmedDate ? (()=>{
+    const [cy,cm,cd] = j.confirmedDate.split('-');
+    return `<div style="margin:12px 0;padding:14px;background:#E3F2FD;border-radius:8px;border-left:3px solid #1565C0">
+      <div style="font-size:12px;font-weight:700;color:#1565C0;margin-bottom:6px">✅ 확정된 시공 일정</div>
+      <div style="font-size:14px;font-weight:700;color:var(--blk)">📅 ${parseInt(cy)}년 ${parseInt(cm)}월 ${parseInt(cd)}일</div>
+      ${j.confirmMemo?`<div style="font-size:13px;color:var(--g2);margin-top:6px;line-height:1.6">${j.confirmMemo}</div>`:''}
+    </div>`;
+  })() : '';
+  c.innerHTML=`<span class="det-tag">${j.catIcon} ${j.cat}</span><div class="det-ttl">${(j.items||[]).join(' · ')}</div><div class="det-rows"><div class="drow"><span class="dk">예약코드</span><span class="dv" style="font-family:monospace">${j.id}</span></div>${j.pyeong?`<div class="drow"><span class="dk">평형대</span><span class="dv">${j.pyeong}</span></div>`:''}<div class="drow"><span class="dk">희망일정</span><span class="dv">📅 ${parseInt(y)}년 ${parseInt(m)}월 ${parseInt(d)}일</span></div><div class="drow"><span class="dk">고객 이름</span><span class="dv">${j.name||'미입력'}</span></div><div class="drow"><span class="dk">연락처</span><span class="dv">${j.phone}</span></div><div class="drow"><span class="dk">주소</span><span class="dv">${j.addr||'미입력'}</span></div>${j.memo?`<div class="drow"><span class="dk">추가 정보</span><span class="dv">${j.memo}</span></div>`:''}<div class="drow"><span class="dk">상태</span><span class="dv">${sm[j.status]}</span></div></div>${confirmedDateHtml}${filesHtml}${total>0?`<div class="price-box"><div class="pb-ttl">예상 견적 내역</div>${itemRows}<div class="pb-row"><span>소계</span><span>${fmt(total)}원</span></div><div class="pb-row"><span>VAT(10%)</span><span>${fmt(vat)}원</span></div><div class="pb-row"><span>총 예상 금액</span><span>${fmt(total+vat)}원~</span></div></div>`:''}<div class="act-btns">${j.status==='new'?`<button class="btn-contact" onclick="updStatus('${j.id}','contacted')">📞 컨택 완료로 변경</button>`:''}${j.status==='contacted'?`<button class="btn-contact" onclick="openConfirmModal('${j.id}')">✅ 시공 일정 확정하기</button>`:''}${j.status==='confirmed'?`<button class="btn-done-a" onclick="updStatus('${j.id}','done')">✓ 시공 완료 처리</button>`:''}${j.status==='done'?`<div style="text-align:center;color:var(--green);font-weight:700;padding:12px">✓ 완료된 공정</div>`:''}</div>`;
+}
+async function updStatus(id,status){
+  const b=bookings.find(x=>x.id===id);if(b)b.status=status;await saveBks();
+  showToast('✓ '+(status==='contacted'?'컨택 완료':'시공 완료')+' 처리');
+  renderDash();selJob(id);
+}
+function setFilter(f,btn){curFilter=f;document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderJobList();}
+function fmt(n){return n.toLocaleString('ko-KR')}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+(async()=>{await load();renderCal();/* checkPromo(); — 나중에 요청 시 주석 해제하면 팝업 다시 활성화 */})();
+
+/* ── PWA Service Worker 등록 ── */
+if('serviceWorker' in navigator){
+  const swCode = `
+    const CACHE = 'dagongda-v1';
+    self.addEventListener('install', e => {
+      self.skipWaiting();
+    });
+    self.addEventListener('activate', e => {
+      e.waitUntil(clients.claim());
+    });
+    self.addEventListener('fetch', e => {
+      e.respondWith(
+        fetch(e.request).catch(() => caches.match(e.request))
+      );
+    });
+  `;
+  const blob = new Blob([swCode], {type:'text/javascript'});
+  const swUrl = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl).catch(()=>{});
+}
+
+/* ── iOS 홈화면 설치 유도 (Safari에서만, 1회만 표시) ── */
+(function(){
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isStandalone = window.navigator.standalone === true;
+  const dismissed = sessionStorage.getItem('pwa-tip-dismissed');
+  if(isIOS && !isStandalone && !dismissed){
+    setTimeout(()=>{
+      const tip = document.createElement('div');
+      tip.id = 'pwa-tip';
+      tip.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#111;color:#fff;padding:14px 20px 28px;font-size:13px;line-height:1.6;z-index:99999;display:flex;align-items:flex-start;gap:12px';
+      tip.innerHTML = `<div style="flex:1"><strong style="color:#f9ba0d">📱 홈화면에 추가하기</strong><br>하단 <strong>공유 버튼(□↑)</strong>을 누른 후 <strong>'홈 화면에 추가'</strong>를 탭하면 앱처럼 사용할 수 있어요!</div><button onclick="document.getElementById('pwa-tip').remove();sessionStorage.setItem('pwa-tip-dismissed','1')" style="background:none;border:none;color:#aaa;font-size:20px;cursor:pointer;padding:0;line-height:1;flex-shrink:0">✕</button>`;
+      document.body.appendChild(tip);
+    }, 3000);
+  }
+})();
+</script>
+</body>
+</html>
